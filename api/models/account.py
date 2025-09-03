@@ -3,7 +3,7 @@ import json
 
 from flask_login import UserMixin  # type: ignore
 from sqlalchemy import func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.base import Base
 
@@ -39,6 +39,10 @@ class Account(UserMixin, Base):
     initialized_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
     updated_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
+    
+    # Role relationship - added for Story-1.1
+    role_id = db.Column(StringUUID, db.ForeignKey('user_roles.id', name='fk_accounts_role_id'), nullable=False)
+    user_role = relationship('UserRole', back_populates='accounts')
 
     @property
     def is_password_set(self):
@@ -124,6 +128,21 @@ class Account(UserMixin, Base):
     @property
     def is_dataset_operator(self):
         return self._current_tenant.current_role == TenantAccountRole.DATASET_OPERATOR
+    
+    # Role-based permission methods - added for Story-1.1
+    @property
+    def is_system_admin(self) -> bool:
+        """Check if user has system admin role (for global permissions)."""
+        return self.user_role and self.user_role.name == 'admin'
+    
+    @property
+    def is_system_user(self) -> bool:
+        """Check if user has standard user role."""
+        return self.user_role and self.user_role.name == 'user'
+        
+    def has_role(self, role_name: str) -> bool:
+        """Check if user has specific role."""
+        return self.user_role and self.user_role.name == role_name and self.user_role.is_active
 
 
 class TenantStatus(enum.StrEnum):
