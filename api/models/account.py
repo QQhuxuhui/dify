@@ -1,5 +1,6 @@
 import enum
 import json
+from typing import List, Union
 
 from flask_login import UserMixin  # type: ignore
 from sqlalchemy import func
@@ -143,6 +144,79 @@ class Account(UserMixin, Base):
     def has_role(self, role_name: str) -> bool:
         """Check if user has specific role."""
         return self.user_role and self.user_role.name == role_name and self.user_role.is_active
+    
+    # Story 1.2: Permission system integration methods
+    @property
+    def role_name(self) -> str:
+        """Get user role name for API responses (AC3 requirement)."""
+        return self.user_role.name if self.user_role else None
+    
+    def has_permission(self, required_roles: Union[str, List[str]]) -> bool:
+        """
+        Check if user has required permissions with role hierarchy support.
+        
+        Integrates with PermissionChecker for consistent validation logic.
+        Supports Story 1.2 AC3 requirement for permission checking.
+        
+        Args:
+            required_roles: Required role(s) - string or list of strings
+            
+        Returns:
+            bool: True if user has required permissions
+        """
+        try:
+            from core.permissions.checker import PermissionChecker
+            return PermissionChecker.check_user_permission(self, required_roles)
+        except Exception:
+            # Fail-safe: deny access on any error
+            return False
+    
+    def get_permissions(self) -> List[str]:
+        """
+        Get list of all permissions user has access to.
+        
+        Returns permissions based on role hierarchy (admin > user).
+        Used for API responses and permission caching.
+        
+        Returns:
+            List[str]: List of permission names
+        """
+        try:
+            from core.permissions.checker import PermissionChecker
+            return PermissionChecker.get_user_permissions(self)
+        except Exception:
+            return []
+    
+    def to_dict_with_role(self) -> dict:
+        """
+        Convert account to dictionary with role information for API responses.
+        
+        Implements Story 1.2 AC5 requirement for extended API response format.
+        Maintains backward compatibility while adding role information.
+        
+        Returns:
+            dict: Account data with role information
+        """
+        base_dict = {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'avatar': self.avatar,
+            'interface_language': self.interface_language,
+            'interface_theme': self.interface_theme,
+            'timezone': self.timezone,
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'last_active_at': self.last_active_at.isoformat() if self.last_active_at else None
+        }
+        
+        # Add role information (Story 1.2 AC5 requirement)
+        if self.user_role:
+            base_dict['role'] = self.user_role.to_dict()
+        else:
+            base_dict['role'] = None
+            
+        return base_dict
 
 
 class TenantStatus(enum.StrEnum):
