@@ -1,9 +1,18 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+import { permissionMiddleware } from '@/middleware/permission-middleware'
 
 const NECESSARY_DOMAIN = '*.sentry.io http://localhost:* http://127.0.0.1:* https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com'
 
 export function middleware(request: NextRequest) {
+  // First, check permissions - this will redirect if access is denied
+  const permissionResponse = permissionMiddleware(request)
+  
+  // If permission middleware returned a redirect or error, return it immediately
+  if (permissionResponse.status !== 200 && permissionResponse.status !== undefined) {
+    return permissionResponse
+  }
+
   const isWhiteListEnabled = !!process.env.NEXT_PUBLIC_CSP_WHITELIST && process.env.NODE_ENV === 'production'
   if (!isWhiteListEnabled)
     return NextResponse.next()
