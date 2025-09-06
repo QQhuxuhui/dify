@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Fragment, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useContext, useContextSelector } from 'use-context-selector'
-import { RiAccountCircleLine, RiArrowDownSLine, RiArrowRightUpLine, RiBookOpenLine, RiGithubLine, RiInformation2Line, RiLogoutBoxRLine, RiMap2Line, RiSettings3Line, RiStarLine } from '@remixicon/react'
+import { RiAccountCircleLine, RiArrowDownSLine, RiArrowRightUpLine, RiBookOpenLine, RiGithubLine, RiInformation2Line, RiLogoutBoxRLine, RiMap2Line, RiSettings3Line, RiStarLine, RiUserLine, RiShieldUserLine } from '@remixicon/react'
 import Link from 'next/link'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import Indicator from '../indicator'
@@ -16,6 +16,7 @@ import I18n from '@/context/i18n'
 import Avatar from '@/app/components/base/avatar'
 import { logout } from '@/service/common'
 import AppContext, { useAppContext } from '@/context/app-context'
+import { useUserRole } from '@/hooks/use-user-role'
 import { useModalContext } from '@/context/modal-context'
 import { LanguagesSupported } from '@/i18n/language'
 import { LicenseStatus } from '@/types/feature'
@@ -37,7 +38,36 @@ export default function AppSelector({ isMobile }: IAppSelector) {
   const { locale } = useContext(I18n)
   const { t } = useTranslation()
   const { userProfile, langeniusVersionInfo, isCurrentWorkspaceOwner } = useAppContext()
+  const { role, isAdmin } = useUserRole()
   const { setShowAccountSettingModal } = useModalContext()
+
+  // Helper function to get role display name and icon
+  const getRoleDisplayInfo = () => {
+    if (!role) return { name: t('common.role.unknown') || '未知', icon: RiUserLine }
+    
+    switch (role.name) {
+      case 'admin':
+        return { 
+          name: t('common.role.admin') || '管理员', 
+          icon: RiShieldUserLine,
+          className: 'text-blue-600' 
+        }
+      case 'user':
+        return { 
+          name: t('common.role.user') || '用户', 
+          icon: RiUserLine,
+          className: 'text-green-600'
+        }
+      default:
+        return { 
+          name: role.description || role.name, 
+          icon: RiUserLine,
+          className: 'text-gray-600'
+        }
+    }
+  }
+
+  const roleInfo = getRoleDisplayInfo()
 
   const handleLogout = async () => {
     await logout({
@@ -94,6 +124,13 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                       <div className='grow'>
                         <div className='system-md-medium break-all text-text-primary'>{userProfile.name}</div>
                         <div className='system-xs-regular break-all text-text-tertiary'>{userProfile.email}</div>
+                        {/* Role indicator */}
+                        <div className='flex items-center gap-1 mt-1'>
+                          <roleInfo.icon className={`size-3 shrink-0 ${roleInfo.className}`} />
+                          <span className={`system-xs-medium ${roleInfo.className}`}>
+                            {roleInfo.name}
+                          </span>
+                        </div>
                       </div>
                       <Avatar avatar={userProfile.avatar_url} name={userProfile.name} size={36} className='mr-3' />
                     </div>
