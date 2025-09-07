@@ -29,7 +29,8 @@ const navClassName = `
 `
 
 const Header = () => {
-  const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator } = useAppContext()
+  const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator, currentWorkspace } = useAppContext()
+  const isNormalUser = currentWorkspace.role === 'normal'
   const selectedSegment = useSelectedLayoutSegment()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -85,27 +86,43 @@ const Header = () => {
       {
         !isMobile && (
           <div className='flex items-center'>
-            {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
-            {!isCurrentWorkspaceDatasetOperator && <AppNav />}
-            {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
-            {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+            {/* 普通用户只显示数据集（知识库）功能 */}
+            {isNormalUser ? (
+              <DatasetNav />
+            ) : (
+              <>
+                {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
+                {!isCurrentWorkspaceDatasetOperator && <AppNav />}
+                {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
+                {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+              </>
+            )}
           </div>
         )
       }
       <div className='flex shrink-0 items-center'>
-        <EnvNav />
-        <div className='mr-3'>
-          <PluginsNav />
-        </div>
+        {!isNormalUser && <EnvNav />}
+        {!isNormalUser && (
+          <div className='mr-3'>
+            <PluginsNav />
+          </div>
+        )}
         <AccountDropdown isMobile={isMobile} />
       </div>
       {
         (isMobile && isShowNavMenu) && (
           <div className='flex w-full flex-col gap-y-1 p-2'>
-            {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
-            {!isCurrentWorkspaceDatasetOperator && <AppNav />}
-            {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
-            {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+            {/* 移动端普通用户只显示数据集（知识库）功能 */}
+            {isNormalUser ? (
+              <DatasetNav />
+            ) : (
+              <>
+                {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
+                {!isCurrentWorkspaceDatasetOperator && <AppNav />}
+                {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
+                {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+              </>
+            )}
           </div>
         )
       }

@@ -1,15 +1,17 @@
+'use client'
 import PluginPage from '@/app/components/plugins/plugin-page'
 import PluginsPanel from '@/app/components/plugins/plugin-page/plugins-panel'
 import Marketplace from '@/app/components/plugins/marketplace'
-import { getLocaleOnServer } from '@/i18n/server'
+import NormalUserGuard from '@/components/route-guard/normal-user-guard'
 
-const PluginList = async () => {
-  const locale = await getLocaleOnServer()
+const PluginList = () => {
   return (
-    <PluginPage
-      plugins={<PluginsPanel />}
-      marketplace={<Marketplace locale={locale} pluginTypeSwitchClassName='top-[60px]' searchBoxAutoAnimate={false} />}
-    />
+    <NormalUserGuard>
+      <PluginPage
+        plugins={<PluginsPanel />}
+        marketplace={<Marketplace locale="en" pluginTypeSwitchClassName='top-[60px]' searchBoxAutoAnimate={false} />}
+      />
+    </NormalUserGuard>
   )
 }
 
