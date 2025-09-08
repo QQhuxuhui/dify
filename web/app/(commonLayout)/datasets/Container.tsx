@@ -77,8 +77,11 @@ const Container = () => {
   }
 
   useEffect(() => {
-    if (currentWorkspace.role === 'normal')
-      return router.replace('/apps')
+    // 移除普通用户重定向逻辑，避免与NormalUserGuard冲突
+    // 普通用户的路由控制统一由NormalUserGuard组件处理
+    if (currentWorkspace.role === 'dataset_operator') {
+      // 数据集操作员可以正常访问数据集页面，无需特殊处理
+    }
   }, [currentWorkspace, router])
 
   return (
