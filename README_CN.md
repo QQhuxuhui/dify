@@ -226,6 +226,15 @@ docker compose up -d
 ##### AWS 
 - [AWS CDK by @KevinZhao](https://github.com/aws-samples/solution-for-deploying-dify-on-aws)
 
+## 升级指导
+
+如果您已经有运行中的 Dify 实例并需要升级到最新版本，请参考我们的 [升级指导手册](docs/UPGRADE_GUIDE.md)，其中包含：
+
+- 不同部署方式的升级步骤（Docker Compose、单容器、源码、Kubernetes）
+- 数据备份与恢复指导
+- 升级验证清单
+- 快速回滚方案
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=langgenius/dify&type=Date)](https://star-history.com/#langgenius/dify&Date)

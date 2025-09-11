@@ -86,9 +86,12 @@ const Header = () => {
       {
         !isMobile && (
           <div className='flex items-center'>
-            {/* 普通用户只显示数据集（知识库）功能 */}
+            {/* 普通用户显示数据集（知识库）和应用（聊天助手）功能 */}
             {isNormalUser ? (
-              <DatasetNav />
+              <>
+                <DatasetNav />
+                <AppNav />
+              </>
             ) : (
               <>
                 {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
@@ -112,9 +115,12 @@ const Header = () => {
       {
         (isMobile && isShowNavMenu) && (
           <div className='flex w-full flex-col gap-y-1 p-2'>
-            {/* 移动端普通用户只显示数据集（知识库）功能 */}
+            {/* 移动端普通用户显示数据集（知识库）和应用（聊天助手）功能 */}
             {isNormalUser ? (
-              <DatasetNav />
+              <>
+                <DatasetNav />
+                <AppNav />
+              </>
             ) : (
               <>
                 {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
