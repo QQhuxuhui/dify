@@ -1,0 +1,47 @@
+# 自定义Dify Web镜像 - 基于现有修改构建
+# 使用官方镜像作为基础，然后应用你的修改
+FROM langgenius/dify-web:1.1.3 as base
+
+# 切换到root用户进行文件操作
+USER root
+
+# 创建临时工作目录
+WORKDIR /tmp/custom
+
+# 复制修改后的前端文件
+COPY web/app/(commonLayout)/apps/Apps.tsx ./web/app/(commonLayout)/apps/Apps.tsx
+COPY web/app/(commonLayout)/apps/page.tsx ./web/app/(commonLayout)/apps/page.tsx
+COPY web/app/(commonLayout)/datasets/Container.tsx ./web/app/(commonLayout)/datasets/Container.tsx
+COPY web/app/(commonLayout)/datasets/Datasets.tsx ./web/app/(commonLayout)/datasets/Datasets.tsx
+COPY web/app/components/header/index.tsx ./web/app/components/header/index.tsx
+COPY web/app/page.tsx ./web/app/page.tsx
+COPY web/components/route-guard/normal-user-guard.tsx ./web/components/route-guard/normal-user-guard.tsx
+
+# 备份原始文件并替换为修改后的文件
+RUN cd /app/web && \
+    # 备份原始文件
+    mkdir -p .backup && \
+    cp -r app .backup/ || true && \
+    cp -r components .backup/ || true && \
+    # 创建目录结构
+    mkdir -p app/\(commonLayout\)/apps && \
+    mkdir -p app/\(commonLayout\)/datasets && \
+    mkdir -p app/components/header && \
+    mkdir -p components/route-guard && \
+    # 复制修改后的文件
+    cp /tmp/custom/web/app/\(commonLayout\)/apps/Apps.tsx app/\(commonLayout\)/apps/Apps.tsx && \
+    cp /tmp/custom/web/app/\(commonLayout\)/apps/page.tsx app/\(commonLayout\)/apps/page.tsx && \
+    cp /tmp/custom/web/app/\(commonLayout\)/datasets/Container.tsx app/\(commonLayout\)/datasets/Container.tsx && \
+    cp /tmp/custom/web/app/\(commonLayout\)/datasets/Datasets.tsx app/\(commonLayout\)/datasets/Datasets.tsx && \
+    cp /tmp/custom/web/app/components/header/index.tsx app/components/header/index.tsx && \
+    cp /tmp/custom/web/app/page.tsx app/page.tsx && \
+    cp /tmp/custom/web/components/route-guard/normal-user-guard.tsx components/route-guard/normal-user-guard.tsx && \
+    # 清理临时文件
+    rm -rf /tmp/custom
+
+# 切换回原始用户
+USER 1001
+
+# 保持原始的工作目录和启动命令
+WORKDIR /app/web
+ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
