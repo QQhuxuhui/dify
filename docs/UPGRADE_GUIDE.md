@@ -30,8 +30,9 @@ docker exec dify-postgres pg_dump -U postgres dify > dify_backup_$(date +%Y%m%d_
 # 或者如果是外部数据库
 pg_dump -h <host> -U <username> -d dify > dify_backup_$(date +%Y%m%d_%H%M%S).sql
 
-# 文件存储备份
-cp -r ./storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
+# 文件存储备份（基于您的 docker-compose.yml 配置）
+# 您的存储已挂载到 ./volumes/app/storage，直接备份此目录
+cp -r ./volumes/app/storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
 ### 3. 记录当前配置
@@ -45,6 +46,8 @@ env | grep -E "(DIFY|DB|REDIS|VECTOR)" > current_config.env
 
 ## 🐳 方式一：Docker Compose 部署升级
 
+> **特别说明**: 以下步骤针对您提供的 docker-compose.yaml 配置进行了定制化调整
+
 ### 识别方法
 ```bash
 # 存在这些文件表示是 Docker Compose 部署
@@ -54,52 +57,179 @@ docker-compose ps  # 能看到多个相关容器
 
 ### 升级步骤
 
-#### 1. 停止服务
+#### 1. 数据备份（基于您的配置）
 ```bash
-cd /path/to/dify
-docker-compose down
+# PostgreSQL 数据备份
+docker-compose exec db pg_dump -U postgres dify > dify_backup_$(date +%Y%m%d_%H%M%S).sql
+
+# 文件存储备份（您的存储挂载在 ./volumes/app/storage）
+cp -r ./volumes/app/storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
+
+# 备份当前配置
+cp docker-compose.yaml docker-compose.yaml.backup
+cp .env .env.backup  # 如果存在
 ```
 
-#### 2. 拉取最新代码
+#### 2. 停止服务
 ```bash
-# 备份当前代码
+# 停止所有服务
+docker-compose down
+
+# 确保所有容器已停止
+docker-compose ps
+```
+
+#### 3. 获取升级版本
+```bash
+# 备份当前目录
 mv dify dify_backup_$(date +%Y%m%d_%H%M%S)
 
-# 拉取你的修改版本
+# 拉取修改后的版本
 git clone https://github.com/QQhuxuhui/dify.git
 cd dify
 git checkout custom-dev-1.1.3
 ```
 
-#### 3. 迁移配置文件
+#### 4. 迁移配置和数据
 ```bash
-# 复制原来的配置
-cp ../dify_backup_*/docker/.env ./docker/.env
-cp ../dify_backup_*/docker/.env.local ./docker/.env.local  # 如果存在
+# 复制数据库数据（如果使用volume挂载）
+cp -r ../dify_backup_*/volumes ./
 
-# 或者手动对比配置差异
-diff ../dify_backup_*/docker/.env ./docker/.env.example
+# 恢复配置文件
+cp ../dify_backup_*/docker-compose.yaml ./docker-compose.yaml.reference
+cp ../dify_backup_*/.env ./.env  # 如果存在
+
+# 对比配置文件差异，手动合并必要配置
+diff ../dify_backup_*/docker-compose.yaml ./docker-compose.yaml.reference
 ```
 
-#### 4. 重新构建和启动
+#### 5. 更新Docker Compose配置
+**重要**：您需要修改docker-compose.yaml文件，将以下镜像替换：
+```yaml
+# 原配置：
+# image: langgenius/dify-api:1.1.3
+# image: langgenius/dify-web:1.1.3
+# image: langgenius/dify-worker:1.1.3
+
+# 更新为（选择一种方式）：
+# 方式1：使用您构建的本地镜像
+api:
+  build:
+    context: ./api
+    dockerfile: Dockerfile
+  # image: langgenius/dify-api:1.1.3  # 注释掉
+
+web:
+  build:
+    context: ./web
+    dockerfile: Dockerfile  
+  # image: langgenius/dify-web:1.1.3  # 注释掉
+
+worker:
+  build:
+    context: ./api
+    dockerfile: Dockerfile
+  # image: langgenius/dify-worker:1.1.3  # 注释掉
+
+# 方式2：如果您推送了自定义镜像到registry
+# image: yourdockerhub/dify-api:custom-1.1.3
+# image: yourdockerhub/dify-web:custom-1.1.3
+# image: yourdockerhub/dify-worker:custom-1.1.3
+```
+
+#### 6. 构建和启动服务
 ```bash
-cd docker
+# 构建包含您修改的镜像
+docker-compose build api web worker
 
-# 重新构建镜像（包含你的修改）
-docker-compose build
-
-# 启动服务
+# 启动所有服务
 docker-compose up -d
 
 # 检查服务状态
 docker-compose ps
-docker-compose logs -f
 ```
 
-#### 5. 数据库迁移
+#### 7. 数据库迁移
 ```bash
-# 进入 API 容器执行迁移
+# 等待数据库启动完成
+sleep 30
+
+# 执行数据库迁移
 docker-compose exec api flask db upgrade
+
+# 检查服务日志
+docker-compose logs -f api
+docker-compose logs -f web
+```
+
+#### 8. 验证升级
+```bash
+# 检查API服务
+curl -f http://localhost/api/version
+
+# 检查Web界面
+curl -f http://localhost
+
+# 测试权限控制功能
+# 1. 使用管理员账号登录，确认所有功能正常
+# 2. 使用普通用户账号登录，验证只能访问知识库和聊天助手页面
+# 3. 验证普通用户不会出现无限跳转问题
+```
+
+#### 9. 回滚步骤（如果升级失败）
+```bash
+# 停止当前服务
+docker-compose down
+
+# 恢复原配置
+cp docker-compose.yaml.backup docker-compose.yaml
+cp .env.backup .env  # 如果存在
+
+# 恢复原代码
+rm -rf dify
+mv dify_backup_* dify
+cd dify
+
+# 恢复数据（如果需要）
+cp -r storage_backup_*/. ./volumes/app/storage/
+
+# 重新启动原版本
+docker-compose up -d
+
+# 恢复数据库（如果需要）
+# docker-compose exec db psql -U postgres -d dify < dify_backup_*.sql
+```
+
+#### 10. 常见问题排查
+
+**问题1: 容器启动失败**
+```bash
+# 检查容器日志
+docker-compose logs api
+docker-compose logs web
+docker-compose logs worker
+
+# 检查端口占用
+netstat -tlnp | grep :80
+netstat -tlnp | grep :5432
+```
+
+**问题2: 数据库连接失败**
+```bash
+# 检查数据库容器
+docker-compose logs db
+
+# 测试数据库连接
+docker-compose exec db psql -U postgres -d dify -c "SELECT version();"
+```
+
+**问题3: 权限控制功能异常**
+```bash
+# 检查前端构建是否包含修改
+docker-compose exec web ls -la /app/.next/
+
+# 检查环境变量
+docker-compose exec api printenv | grep DIFY
 ```
 
 ---
@@ -380,7 +510,11 @@ docker exec dify-postgres psql -U postgres -c "CREATE DATABASE dify;"
 cp -r ./storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
 
 # Docker Compose 环境
-docker cp dify-api:/app/storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
+# 对于使用 volumes 挂载的情况（如您的配置）
+cp -r ./volumes/app/storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
+
+# 或者从容器内备份（如果使用默认配置）
+# docker cp api:/app/storage ./storage_backup_$(date +%Y%m%d_%H%M%S)
 
 # 压缩备份
 tar -czf storage_backup_$(date +%Y%m%d_%H%M%S).tar.gz ./storage
@@ -392,7 +526,11 @@ tar -czf storage_backup_$(date +%Y%m%d_%H%M%S).tar.gz ./storage
 cp -r ./storage_backup_20240308_143022/* ./storage/
 
 # Docker 环境恢复
-docker cp ./storage_backup_20240308_143022/. dify-api:/app/storage/
+# 对于使用 volumes 挂载的情况（如您的配置）
+cp -r ./storage_backup_20240308_143022/* ./volumes/app/storage/
+
+# 或者恢复到容器内（如果使用默认配置）
+# docker cp ./storage_backup_20240308_143022/. api:/app/storage/
 ```
 
 ---
