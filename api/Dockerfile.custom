@@ -1,0 +1,17 @@
+# 基于官方API镜像，注入自定义修改
+FROM langgenius/dify-api:1.1.3
+
+# 复制自定义修改的文件
+COPY core/rag/datasource/retrieval_service.py /app/api/core/rag/datasource/retrieval_service.py
+COPY core/rag/retrieval/dataset_retrieval.py /app/api/core/rag/retrieval/dataset_retrieval.py
+
+# 设置工作目录和环境变量
+WORKDIR /app/api
+ENV FLASK_APP=app.py
+ENV EDITION=SELF_HOSTED
+
+# 暴露端口
+EXPOSE 5001
+
+# 使用原有的启动脚本
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
