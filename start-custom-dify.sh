@@ -48,6 +48,20 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
+# 检测Docker Compose命令版本
+echo -e "${YELLOW}🔍 检测Docker Compose版本...${NC}"
+if docker compose version > /dev/null 2>&1; then
+    DOCKER_COMPOSE_CMD="docker compose"
+    echo -e "${GREEN}✅ 使用Docker Compose v2: docker compose${NC}"
+elif docker-compose --version > /dev/null 2>&1; then
+    DOCKER_COMPOSE_CMD="docker-compose"
+    echo -e "${GREEN}✅ 使用Docker Compose v1: docker-compose${NC}"
+else
+    echo -e "${RED}❌ 未找到Docker Compose命令${NC}"
+    echo "请安装Docker Compose v1 (docker-compose) 或 v2 (docker compose)"
+    exit 1
+fi
+
 # 创建必要的目录
 echo -e "${YELLOW}📁 创建必要的目录...${NC}"
 mkdir -p volumes/app/storage
@@ -60,7 +74,7 @@ mkdir -p volumes/plugin_daemon
 
 # 验证配置文件
 echo -e "${YELLOW}🔍 验证配置文件...${NC}"
-if docker compose -f $COMPOSE_FILE --env-file $ENV_FILE config --quiet; then
+if $DOCKER_COMPOSE_CMD -f $COMPOSE_FILE --env-file $ENV_FILE config --quiet; then
     echo -e "${GREEN}✅ 配置文件验证通过${NC}"
 else
     echo -e "${RED}❌ 配置文件验证失败${NC}"
@@ -86,21 +100,21 @@ case $choice in
         echo -e "${YELLOW}🚀 前台启动Dify服务...${NC}"
         echo -e "${BLUE}提示: 按 Ctrl+C 停止服务${NC}"
         echo ""
-        docker compose -f $COMPOSE_FILE --env-file $ENV_FILE up
+        $DOCKER_COMPOSE_CMD -f $COMPOSE_FILE --env-file $ENV_FILE up
         ;;
     2)
         echo ""
         echo -e "${YELLOW}🚀 后台启动Dify服务...${NC}"
-        docker compose -f $COMPOSE_FILE --env-file $ENV_FILE up -d
+        $DOCKER_COMPOSE_CMD -f $COMPOSE_FILE --env-file $ENV_FILE up -d
         
         echo ""
         echo -e "${GREEN}✅ 服务已在后台启动${NC}"
         echo ""
         echo -e "${YELLOW}📋 常用命令：${NC}"
-        echo "查看服务状态: ${BLUE}docker compose -f $COMPOSE_FILE ps${NC}"
-        echo "查看日志: ${BLUE}docker compose -f $COMPOSE_FILE logs -f${NC}"
-        echo "停止服务: ${BLUE}docker compose -f $COMPOSE_FILE down${NC}"
-        echo "重启服务: ${BLUE}docker compose -f $COMPOSE_FILE restart${NC}"
+        echo "查看服务状态: ${BLUE}$DOCKER_COMPOSE_CMD -f $COMPOSE_FILE ps${NC}"
+        echo "查看日志: ${BLUE}$DOCKER_COMPOSE_CMD -f $COMPOSE_FILE logs -f${NC}"
+        echo "停止服务: ${BLUE}$DOCKER_COMPOSE_CMD -f $COMPOSE_FILE down${NC}"
+        echo "重启服务: ${BLUE}$DOCKER_COMPOSE_CMD -f $COMPOSE_FILE restart${NC}"
         
         # 等待服务启动并显示状态
         echo ""
@@ -109,7 +123,7 @@ case $choice in
         
         echo ""
         echo -e "${YELLOW}📊 服务状态：${NC}"
-        docker compose -f $COMPOSE_FILE ps
+        $DOCKER_COMPOSE_CMD -f $COMPOSE_FILE ps
         
         echo ""
         echo -e "${GREEN}🎉 Dify自定义版本已启动！${NC}"
