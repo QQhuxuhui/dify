@@ -1,7 +1,6 @@
-# ==================================================================
-# 自定义Dify Docker Compose配置文件
-# 使用自定义构建的Web和API镜像
-# ==================================================================
+# Custom Dify Docker Compose Configuration
+# Based on the original docker/docker-compose.yaml but with custom images for api, worker, and web services
+# All other services and configurations remain unchanged from the original file
 
 x-shared-env: &shared-api-worker-env
   CONSOLE_API_URL: ${CONSOLE_API_URL:-}
@@ -163,6 +162,104 @@ x-shared-env: &shared-api-worker-env
   PGVECTO_RS_USER: ${PGVECTO_RS_USER:-postgres}
   PGVECTO_RS_PASSWORD: ${PGVECTO_RS_PASSWORD:-difyai123456}
   PGVECTO_RS_DATABASE: ${PGVECTO_RS_DATABASE:-dify}
+  ANALYTICDB_KEY_ID: ${ANALYTICDB_KEY_ID:-your-ak}
+  ANALYTICDB_KEY_SECRET: ${ANALYTICDB_KEY_SECRET:-your-sk}
+  ANALYTICDB_REGION_ID: ${ANALYTICDB_REGION_ID:-cn-hangzhou}
+  ANALYTICDB_INSTANCE_ID: ${ANALYTICDB_INSTANCE_ID:-gp-ab123456}
+  ANALYTICDB_ACCOUNT: ${ANALYTICDB_ACCOUNT:-testaccount}
+  ANALYTICDB_PASSWORD: ${ANALYTICDB_PASSWORD:-testpassword}
+  ANALYTICDB_NAMESPACE: ${ANALYTICDB_NAMESPACE:-dify}
+  ANALYTICDB_NAMESPACE_PASSWORD: ${ANALYTICDB_NAMESPACE_PASSWORD:-difypassword}
+  ANALYTICDB_HOST: ${ANALYTICDB_HOST:-gp-test.aliyuncs.com}
+  ANALYTICDB_PORT: ${ANALYTICDB_PORT:-5432}
+  ANALYTICDB_MIN_CONNECTION: ${ANALYTICDB_MIN_CONNECTION:-1}
+  ANALYTICDB_MAX_CONNECTION: ${ANALYTICDB_MAX_CONNECTION:-5}
+  TIDB_VECTOR_HOST: ${TIDB_VECTOR_HOST:-tidb}
+  TIDB_VECTOR_PORT: ${TIDB_VECTOR_PORT:-4000}
+  TIDB_VECTOR_USER: ${TIDB_VECTOR_USER:-}
+  TIDB_VECTOR_PASSWORD: ${TIDB_VECTOR_PASSWORD:-}
+  TIDB_VECTOR_DATABASE: ${TIDB_VECTOR_DATABASE:-dify}
+  TIDB_ON_QDRANT_URL: ${TIDB_ON_QDRANT_URL:-http://127.0.0.1}
+  TIDB_ON_QDRANT_API_KEY: ${TIDB_ON_QDRANT_API_KEY:-dify}
+  TIDB_ON_QDRANT_CLIENT_TIMEOUT: ${TIDB_ON_QDRANT_CLIENT_TIMEOUT:-20}
+  TIDB_ON_QDRANT_GRPC_ENABLED: ${TIDB_ON_QDRANT_GRPC_ENABLED:-false}
+  TIDB_ON_QDRANT_GRPC_PORT: ${TIDB_ON_QDRANT_GRPC_PORT:-6334}
+  TIDB_PUBLIC_KEY: ${TIDB_PUBLIC_KEY:-dify}
+  TIDB_PRIVATE_KEY: ${TIDB_PRIVATE_KEY:-dify}
+  TIDB_API_URL: ${TIDB_API_URL:-http://127.0.0.1}
+  TIDB_IAM_API_URL: ${TIDB_IAM_API_URL:-http://127.0.0.1}
+  TIDB_REGION: ${TIDB_REGION:-regions/aws-us-east-1}
+  TIDB_PROJECT_ID: ${TIDB_PROJECT_ID:-dify}
+  TIDB_SPEND_LIMIT: ${TIDB_SPEND_LIMIT:-100}
+  CHROMA_HOST: ${CHROMA_HOST:-127.0.0.1}
+  CHROMA_PORT: ${CHROMA_PORT:-8000}
+  CHROMA_TENANT: ${CHROMA_TENANT:-default_tenant}
+  CHROMA_DATABASE: ${CHROMA_DATABASE:-default_database}
+  CHROMA_AUTH_PROVIDER: ${CHROMA_AUTH_PROVIDER:-chromadb.auth.token_authn.TokenAuthClientProvider}
+  CHROMA_AUTH_CREDENTIALS: ${CHROMA_AUTH_CREDENTIALS:-}
+  ORACLE_USER: ${ORACLE_USER:-dify}
+  ORACLE_PASSWORD: ${ORACLE_PASSWORD:-dify}
+  ORACLE_DSN: ${ORACLE_DSN:-oracle:1521/FREEPDB1}
+  ORACLE_CONFIG_DIR: ${ORACLE_CONFIG_DIR:-/app/api/storage/wallet}
+  ORACLE_WALLET_LOCATION: ${ORACLE_WALLET_LOCATION:-/app/api/storage/wallet}
+  ORACLE_WALLET_PASSWORD: ${ORACLE_WALLET_PASSWORD:-dify}
+  ORACLE_IS_AUTONOMOUS: ${ORACLE_IS_AUTONOMOUS:-false}
+  RELYT_HOST: ${RELYT_HOST:-db}
+  RELYT_PORT: ${RELYT_PORT:-5432}
+  RELYT_USER: ${RELYT_USER:-postgres}
+  RELYT_PASSWORD: ${RELYT_PASSWORD:-difyai123456}
+  RELYT_DATABASE: ${RELYT_DATABASE:-postgres}
+  OPENSEARCH_HOST: ${OPENSEARCH_HOST:-opensearch}
+  OPENSEARCH_PORT: ${OPENSEARCH_PORT:-9200}
+  OPENSEARCH_USER: ${OPENSEARCH_USER:-admin}
+  OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD:-admin}
+  OPENSEARCH_SECURE: ${OPENSEARCH_SECURE:-true}
+  TENCENT_VECTOR_DB_URL: ${TENCENT_VECTOR_DB_URL:-http://127.0.0.1}
+  TENCENT_VECTOR_DB_API_KEY: ${TENCENT_VECTOR_DB_API_KEY:-dify}
+  TENCENT_VECTOR_DB_TIMEOUT: ${TENCENT_VECTOR_DB_TIMEOUT:-30}
+  TENCENT_VECTOR_DB_USERNAME: ${TENCENT_VECTOR_DB_USERNAME:-dify}
+  TENCENT_VECTOR_DB_DATABASE: ${TENCENT_VECTOR_DB_DATABASE:-dify}
+  TENCENT_VECTOR_DB_SHARD: ${TENCENT_VECTOR_DB_SHARD:-1}
+  TENCENT_VECTOR_DB_REPLICAS: ${TENCENT_VECTOR_DB_REPLICAS:-2}
+  ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST:-0.0.0.0}
+  ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT:-9200}
+  ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
+  ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-elastic}
+  KIBANA_PORT: ${KIBANA_PORT:-5601}
+  BAIDU_VECTOR_DB_ENDPOINT: ${BAIDU_VECTOR_DB_ENDPOINT:-http://127.0.0.1:5287}
+  BAIDU_VECTOR_DB_CONNECTION_TIMEOUT_MS: ${BAIDU_VECTOR_DB_CONNECTION_TIMEOUT_MS:-30000}
+  BAIDU_VECTOR_DB_ACCOUNT: ${BAIDU_VECTOR_DB_ACCOUNT:-root}
+  BAIDU_VECTOR_DB_API_KEY: ${BAIDU_VECTOR_DB_API_KEY:-dify}
+  BAIDU_VECTOR_DB_DATABASE: ${BAIDU_VECTOR_DB_DATABASE:-dify}
+  BAIDU_VECTOR_DB_SHARD: ${BAIDU_VECTOR_DB_SHARD:-1}
+  BAIDU_VECTOR_DB_REPLICAS: ${BAIDU_VECTOR_DB_REPLICAS:-3}
+  VIKINGDB_ACCESS_KEY: ${VIKINGDB_ACCESS_KEY:-your-ak}
+  VIKINGDB_SECRET_KEY: ${VIKINGDB_SECRET_KEY:-your-sk}
+  VIKINGDB_REGION: ${VIKINGDB_REGION:-cn-shanghai}
+  VIKINGDB_HOST: ${VIKINGDB_HOST:-api-vikingdb.xxx.volces.com}
+  VIKINGDB_SCHEMA: ${VIKINGDB_SCHEMA:-http}
+  VIKINGDB_CONNECTION_TIMEOUT: ${VIKINGDB_CONNECTION_TIMEOUT:-30}
+  VIKINGDB_SOCKET_TIMEOUT: ${VIKINGDB_SOCKET_TIMEOUT:-30}
+  LINDORM_URL: ${LINDORM_URL:-http://lindorm:30070}
+  LINDORM_USERNAME: ${LINDORM_USERNAME:-lindorm}
+  LINDORM_PASSWORD: ${LINDORM_PASSWORD:-lindorm}
+  OCEANBASE_VECTOR_HOST: ${OCEANBASE_VECTOR_HOST:-oceanbase}
+  OCEANBASE_VECTOR_PORT: ${OCEANBASE_VECTOR_PORT:-2881}
+  OCEANBASE_VECTOR_USER: ${OCEANBASE_VECTOR_USER:-root@test}
+  OCEANBASE_VECTOR_PASSWORD: ${OCEANBASE_VECTOR_PASSWORD:-difyai123456}
+  OCEANBASE_VECTOR_DATABASE: ${OCEANBASE_VECTOR_DATABASE:-test}
+  OCEANBASE_CLUSTER_NAME: ${OCEANBASE_CLUSTER_NAME:-difyai}
+  OCEANBASE_MEMORY_LIMIT: ${OCEANBASE_MEMORY_LIMIT:-6G}
+  OPENGAUSS_HOST: ${OPENGAUSS_HOST:-opengauss}
+  OPENGAUSS_PORT: ${OPENGAUSS_PORT:-6600}
+  OPENGAUSS_USER: ${OPENGAUSS_USER:-postgres}
+  OPENGAUSS_PASSWORD: ${OPENGAUSS_PASSWORD:-Dify@123}
+  OPENGAUSS_DATABASE: ${OPENGAUSS_DATABASE:-dify}
+  OPENGAUSS_MIN_CONNECTION: ${OPENGAUSS_MIN_CONNECTION:-1}
+  OPENGAUSS_MAX_CONNECTION: ${OPENGAUSS_MAX_CONNECTION:-5}
+  OPENGAUSS_ENABLE_PQ: ${OPENGAUSS_ENABLE_PQ:-false}
+  UPSTASH_VECTOR_URL: ${UPSTASH_VECTOR_URL:-https://xxx-vector.upstash.io}
+  UPSTASH_VECTOR_TOKEN: ${UPSTASH_VECTOR_TOKEN:-dify}
   UPLOAD_FILE_SIZE_LIMIT: ${UPLOAD_FILE_SIZE_LIMIT:-15}
   UPLOAD_FILE_BATCH_LIMIT: ${UPLOAD_FILE_BATCH_LIMIT:-5}
   ETL_TYPE: ${ETL_TYPE:-dify}
@@ -332,12 +429,9 @@ x-shared-env: &shared-api-worker-env
   PIP_MIRROR_URL: ${PIP_MIRROR_URL:-}
 
 services:
-  # ========================
-  # 🎯 自定义API服务
-  # 包含检索增强功能和文档ID过滤
-  # ========================
+  # API service - Custom Image
   api:
-    image: ${CUSTOM_DIFY_API_IMAGE:-custom-dify-api:1.1.3}
+    image: registry.cn-hangzhou.aliyuncs.com/hxh_bigdata/custom-dify-api:1.1.3
     restart: always
     environment:
       # Use the shared environment variables.
@@ -361,10 +455,10 @@ services:
       - ssrf_proxy_network
       - default
 
-  # worker service
+  # worker service - Custom Image
   # The Celery worker for processing the queue.
   worker:
-    image: ${CUSTOM_DIFY_API_IMAGE:-custom-dify-api:1.1.3}
+    image: registry.cn-hangzhou.aliyuncs.com/hxh_bigdata/custom-dify-api:1.1.3
     restart: always
     environment:
       # Use the shared environment variables.
@@ -386,12 +480,9 @@ services:
       - ssrf_proxy_network
       - default
 
-  # ========================  
-  # 🎯 自定义Web服务
-  # 包含用户权限控制和路由保护
-  # ========================
+  # Frontend web application - Custom Image
   web:
-    image: ${CUSTOM_DIFY_WEB_IMAGE:-custom-dify-web:1.1.3}
+    image: registry.cn-hangzhou.aliyuncs.com/hxh_bigdata/custom-dify-web:1.1.3
     restart: always
     environment:
       CONSOLE_API_URL: ${CONSOLE_API_URL:-}
@@ -506,7 +597,7 @@ services:
     volumes:
       - ./ssrf_proxy/squid.conf.template:/etc/squid/squid.conf.template
       - ./ssrf_proxy/docker-entrypoint.sh:/docker-entrypoint-mount.sh
-    entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
+    entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
     environment:
       # pls clearly modify the squid env vars to fit your network environment.
       HTTP_PORT: ${SSRF_HTTP_PORT:-3128}
@@ -553,7 +644,7 @@ services:
       - ./volumes/certbot/conf/live:/etc/letsencrypt/live # cert dir (with certbot container)
       - ./volumes/certbot/conf:/etc/letsencrypt
       - ./volumes/certbot/www:/var/www/html
-    entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
+    entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
     environment:
       NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:-_}
       NGINX_HTTPS_ENABLED: ${NGINX_HTTPS_ENABLED:-false}
@@ -602,10 +693,371 @@ services:
       AUTHORIZATION_ADMINLIST_ENABLED: ${WEAVIATE_AUTHORIZATION_ADMINLIST_ENABLED:-true}
       AUTHORIZATION_ADMINLIST_USERS: ${WEAVIATE_AUTHORIZATION_ADMINLIST_USERS:-hello@dify.ai}
 
+  # Qdrant vector store.
+  # (if used, you need to set VECTOR_STORE to qdrant in the api & worker service.)
+  qdrant:
+    image: langgenius/qdrant:v1.7.3
+    profiles:
+      - qdrant
+    restart: always
+    volumes:
+      - ./volumes/qdrant:/qdrant/storage
+    environment:
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-difyai123456}
+
+  # The Couchbase vector store.
+  couchbase-server:
+    build: ./couchbase-server
+    profiles:
+      - couchbase
+    restart: always
+    environment:
+      - CLUSTER_NAME=dify_search
+      - COUCHBASE_ADMINISTRATOR_USERNAME=${COUCHBASE_USER:-Administrator}
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=${COUCHBASE_PASSWORD:-password}
+      - COUCHBASE_BUCKET=${COUCHBASE_BUCKET_NAME:-Embeddings}
+      - COUCHBASE_BUCKET_RAMSIZE=512
+      - COUCHBASE_RAM_SIZE=2048
+      - COUCHBASE_EVENTING_RAM_SIZE=512
+      - COUCHBASE_INDEX_RAM_SIZE=512
+      - COUCHBASE_FTS_RAM_SIZE=1024
+    hostname: couchbase-server
+    container_name: couchbase-server
+    working_dir: /opt/couchbase
+    stdin_open: true
+    tty: true
+    entrypoint: [ "" ]
+    command: sh -c "/opt/couchbase/init/init-cbserver.sh"
+    volumes:
+      - ./volumes/couchbase/data:/opt/couchbase/var/lib/couchbase/data
+    healthcheck:
+      # ensure bucket was created before proceeding
+      test: [ "CMD-SHELL", "curl -s -f -u Administrator:password http://localhost:8091/pools/default/buckets | grep -q '\\[{' || exit 1" ]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+
+  # The pgvector vector database.
+  pgvector:
+    image: pgvector/pgvector:pg16
+    profiles:
+      - pgvector
+    restart: always
+    environment:
+      PGUSER: ${PGVECTOR_PGUSER:-postgres}
+      # The password for the default postgres user.
+      POSTGRES_PASSWORD: ${PGVECTOR_POSTGRES_PASSWORD:-difyai123456}
+      # The name of the default postgres database.
+      POSTGRES_DB: ${PGVECTOR_POSTGRES_DB:-dify}
+      # postgres data directory
+      PGDATA: ${PGVECTOR_PGDATA:-/var/lib/postgresql/data/pgdata}
+      # pg_bigm module for full text search
+      PG_BIGM: ${PGVECTOR_PG_BIGM:-false}
+      PG_BIGM_VERSION: ${PGVECTOR_PG_BIGM_VERSION:-1.2-20240606}
+    volumes:
+      - ./volumes/pgvector/data:/var/lib/postgresql/data
+      - ./pgvector/docker-entrypoint.sh:/docker-entrypoint.sh
+    entrypoint: [ '/docker-entrypoint.sh' ]
+    healthcheck:
+      test: [ 'CMD', 'pg_isready' ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  # pgvecto-rs vector store
+  pgvecto-rs:
+    image: tensorchord/pgvecto-rs:pg16-v0.3.0
+    profiles:
+      - pgvecto-rs
+    restart: always
+    environment:
+      PGUSER: ${PGVECTOR_PGUSER:-postgres}
+      # The password for the default postgres user.
+      POSTGRES_PASSWORD: ${PGVECTOR_POSTGRES_PASSWORD:-difyai123456}
+      # The name of the default postgres database.
+      POSTGRES_DB: ${PGVECTOR_POSTGRES_DB:-dify}
+      # postgres data directory
+      PGDATA: ${PGVECTOR_PGDATA:-/var/lib/postgresql/data/pgdata}
+    volumes:
+      - ./volumes/pgvecto_rs/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD', 'pg_isready' ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  # Chroma vector database
+  chroma:
+    image: ghcr.io/chroma-core/chroma:0.5.20
+    profiles:
+      - chroma
+    restart: always
+    volumes:
+      - ./volumes/chroma:/chroma/chroma
+    environment:
+      CHROMA_SERVER_AUTHN_CREDENTIALS: ${CHROMA_SERVER_AUTHN_CREDENTIALS:-difyai123456}
+      CHROMA_SERVER_AUTHN_PROVIDER: ${CHROMA_SERVER_AUTHN_PROVIDER:-chromadb.auth.token_authn.TokenAuthenticationServerProvider}
+      IS_PERSISTENT: ${CHROMA_IS_PERSISTENT:-TRUE}
+
+  # OceanBase vector database
+  oceanbase:
+    image: quay.io/oceanbase/oceanbase-ce:4.3.3.0-100000142024101215
+    profiles:
+      - oceanbase
+    restart: always
+    volumes:
+      - ./volumes/oceanbase/data:/root/ob
+      - ./volumes/oceanbase/conf:/root/.obd/cluster
+      - ./volumes/oceanbase/init.d:/root/boot/init.d
+    environment:
+      OB_MEMORY_LIMIT: ${OCEANBASE_MEMORY_LIMIT:-6G}
+      OB_SYS_PASSWORD: ${OCEANBASE_VECTOR_PASSWORD:-difyai123456}
+      OB_TENANT_PASSWORD: ${OCEANBASE_VECTOR_PASSWORD:-difyai123456}
+      OB_CLUSTER_NAME: ${OCEANBASE_CLUSTER_NAME:-difyai}
+      OB_SERVER_IP: '127.0.0.1'
+
+  # Oracle vector database
+  oracle:
+    image: container-registry.oracle.com/database/free:latest
+    profiles:
+      - oracle
+    restart: always
+    volumes:
+      - source: oradata
+        type: volume
+        target: /opt/oracle/oradata
+      - ./startupscripts:/opt/oracle/scripts/startup
+    environment:
+      ORACLE_PWD: ${ORACLE_PWD:-Dify123456}
+      ORACLE_CHARACTERSET: ${ORACLE_CHARACTERSET:-AL32UTF8}
+
+  # Milvus vector database services
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.5
+    profiles:
+      - milvus
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: ${ETCD_AUTO_COMPACTION_MODE:-revision}
+      ETCD_AUTO_COMPACTION_RETENTION: ${ETCD_AUTO_COMPACTION_RETENTION:-1000}
+      ETCD_QUOTA_BACKEND_BYTES: ${ETCD_QUOTA_BACKEND_BYTES:-4294967296}
+      ETCD_SNAPSHOT_COUNT: ${ETCD_SNAPSHOT_COUNT:-50000}
+    volumes:
+      - ./volumes/milvus/etcd:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: [ 'CMD', 'etcdctl', 'endpoint', 'health' ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - milvus
+
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    profiles:
+      - milvus
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - ./volumes/milvus/minio:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live' ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - milvus
+
+  milvus-standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.5.0-beta
+    profiles:
+      - milvus
+    command: [ 'milvus', 'run', 'standalone' ]
+    environment:
+      ETCD_ENDPOINTS: ${ETCD_ENDPOINTS:-etcd:2379}
+      MINIO_ADDRESS: ${MINIO_ADDRESS:-minio:9000}
+      common.security.authorizationEnabled: ${MILVUS_AUTHORIZATION_ENABLED:-true}
+    volumes:
+      - ./volumes/milvus/milvus:/var/lib/milvus
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://localhost:9091/healthz' ]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    depends_on:
+      - etcd
+      - minio
+    ports:
+      - 19530:19530
+      - 9091:9091
+    networks:
+      - milvus
+
+  # Opensearch vector database
+  opensearch:
+    container_name: opensearch
+    image: opensearchproject/opensearch:latest
+    profiles:
+      - opensearch
+    environment:
+      discovery.type: ${OPENSEARCH_DISCOVERY_TYPE:-single-node}
+      bootstrap.memory_lock: ${OPENSEARCH_BOOTSTRAP_MEMORY_LOCK:-true}
+      OPENSEARCH_JAVA_OPTS: -Xms${OPENSEARCH_JAVA_OPTS_MIN:-512m} -Xmx${OPENSEARCH_JAVA_OPTS_MAX:-1024m}
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${OPENSEARCH_INITIAL_ADMIN_PASSWORD:-Qazwsxedc!@#123}
+    ulimits:
+      memlock:
+        soft: ${OPENSEARCH_MEMLOCK_SOFT:--1}
+        hard: ${OPENSEARCH_MEMLOCK_HARD:--1}
+      nofile:
+        soft: ${OPENSEARCH_NOFILE_SOFT:-65536}
+        hard: ${OPENSEARCH_NOFILE_HARD:-65536}
+    volumes:
+      - ./volumes/opensearch/data:/usr/share/opensearch/data
+    networks:
+      - opensearch-net
+
+  opensearch-dashboards:
+    container_name: opensearch-dashboards
+    image: opensearchproject/opensearch-dashboards:latest
+    profiles:
+      - opensearch
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
+    volumes:
+      - ./volumes/opensearch/opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
+    networks:
+      - opensearch-net
+    depends_on:
+      - opensearch
+
+  # opengauss vector database.
+  opengauss:
+    image: opengauss/opengauss:7.0.0-RC1
+    profiles:
+      - opengauss
+    privileged: true
+    restart: always
+    environment:
+      GS_USERNAME: ${OPENGAUSS_USER:-postgres}
+      GS_PASSWORD: ${OPENGAUSS_PASSWORD:-Dify@123}
+      GS_PORT: ${OPENGAUSS_PORT:-6600}
+      GS_DB: ${OPENGAUSS_DATABASE:-dify}
+    volumes:
+      - ./volumes/opengauss/data:/var/lib/opengauss/data
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -lntp | grep tcp6 > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    ports:
+      - ${OPENGAUSS_PORT:-6600}:${OPENGAUSS_PORT:-6600}
+
+  # MyScale vector database
+  myscale:
+    container_name: myscale
+    image: myscale/myscaledb:1.6.4
+    profiles:
+      - myscale
+    restart: always
+    tty: true
+    volumes:
+      - ./volumes/myscale/data:/var/lib/clickhouse
+      - ./volumes/myscale/log:/var/log/clickhouse-server
+      - ./volumes/myscale/config/users.d/custom_users_config.xml:/etc/clickhouse-server/users.d/custom_users_config.xml
+    ports:
+      - ${MYSCALE_PORT:-8123}:${MYSCALE_PORT:-8123}
+
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-prod-prerequisites
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    container_name: elasticsearch
+    profiles:
+      - elasticsearch
+      - elasticsearch-ja
+    restart: always
+    volumes:
+      - ./elasticsearch/docker-entrypoint.sh:/docker-entrypoint-mount.sh
+      - dify_es01_data:/usr/share/elasticsearch/data
+    environment:
+      ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD:-elastic}
+      VECTOR_STORE: ${VECTOR_STORE:-}
+      cluster.name: dify-es-cluster
+      node.name: dify-es0
+      discovery.type: single-node
+      xpack.license.self_generated.type: basic
+      xpack.security.enabled: 'true'
+      xpack.security.enrollment.enabled: 'false'
+      xpack.security.http.ssl.enabled: 'false'
+    ports:
+      - ${ELASTICSEARCH_PORT:-9200}:9200
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+    entrypoint: [ 'sh', '-c', "sh /docker-entrypoint-mount.sh" ]
+    healthcheck:
+      test: [ 'CMD', 'curl', '-s', 'http://localhost:9200/_cluster/health?pretty' ]
+      interval: 30s
+      timeout: 10s
+      retries: 50
+
+  # https://www.elastic.co/guide/en/kibana/current/docker.html
+  # https://www.elastic.co/guide/en/kibana/current/settings.html
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.3
+    container_name: kibana
+    profiles:
+      - elasticsearch
+    depends_on:
+      - elasticsearch
+    restart: always
+    environment:
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: d1a66dfd-c4d3-4a0a-8290-2abcb83ab3aa
+      NO_PROXY: localhost,127.0.0.1,elasticsearch,kibana
+      XPACK_SECURITY_ENABLED: 'true'
+      XPACK_SECURITY_ENROLLMENT_ENABLED: 'false'
+      XPACK_SECURITY_HTTP_SSL_ENABLED: 'false'
+      XPACK_FLEET_ISAIRGAPPED: 'true'
+      I18N_LOCALE: zh-CN
+      SERVER_PORT: '5601'
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - ${KIBANA_PORT:-5601}:5601
+    healthcheck:
+      test: [ 'CMD-SHELL', 'curl -s http://localhost:5601 >/dev/null || exit 1' ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # unstructured .
+  # (if used, you need to set ETL_TYPE to Unstructured in the api & worker service.)
+  unstructured:
+    image: downloads.unstructured.io/unstructured-io/unstructured-api:latest
+    profiles:
+      - unstructured
+    restart: always
+    volumes:
+      - ./volumes/unstructured:/app/data
+
 networks:
   # create a network between sandbox, api and ssrf_proxy, and can not access outside.
   ssrf_proxy_network:
     driver: bridge
     internal: true
+  milvus:
+    driver: bridge
+  opensearch-net:
+    driver: bridge
+    internal: true
 
-volumes: {}
+volumes:
+  oradata:
+  dify_es01_data:
