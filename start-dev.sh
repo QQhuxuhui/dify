@@ -12,7 +12,7 @@ fi
 
 # 检查PostgreSQL
 echo "📋 检查PostgreSQL服务..."
-if pg_isready -h localhost -p 5432 > /dev/null 2>&1; then
+if docker ps --format "table {{.Names}}" | grep -q "docker-db-1" && docker exec docker-db-1 pg_isready > /dev/null 2>&1; then
     echo "✅ PostgreSQL 运行正常"
 else
     echo "❌ PostgreSQL 未运行，请检查Docker PostgreSQL容器"
