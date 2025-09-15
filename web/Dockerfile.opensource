@@ -1,0 +1,149 @@
+# ==========================================
+# 自定义Dify Web镜像 - 开源多阶段构建方案
+# 基于Docker最佳实践，包含权限控制功能
+# ==========================================
+
+# 兼容传统Docker构建环境
+
+# 构建参数
+ARG NODE_VERSION=20-alpine3.20
+ARG NGINX_VERSION=alpine3.20
+
+# ==========================================
+# 阶段1: 基础环境准备
+# ==========================================
+FROM node:${NODE_VERSION} AS base
+LABEL maintainer="takatost@gmail.com"
+LABEL description="Dify Web with Custom Permission Control"
+LABEL version="1.1.3"
+
+# 优化Alpine镜像（中国用户可取消注释）
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+# 安装系统依赖
+RUN apk add --no-cache tzdata
+
+# 设置pnpm
+RUN npm install -g pnpm@9.12.2
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+# ==========================================
+# 阶段2: 依赖安装
+# ==========================================
+FROM base AS dependencies
+
+WORKDIR /app/web
+
+# 复制包管理文件（利用Docker缓存层）
+COPY package.json pnpm-lock.yaml ./
+
+# 安装依赖（中国用户可使用淘宝镜像加速）
+# RUN pnpm install --frozen-lockfile --registry https://registry.npmmirror.com/
+RUN pnpm install --frozen-lockfile
+
+# ==========================================
+# 阶段3: 应用构建
+# ==========================================
+FROM base AS builder
+
+WORKDIR /app/web
+
+# 从依赖阶段复制node_modules
+COPY --from=dependencies /app/web/node_modules ./node_modules
+
+# 复制源代码
+COPY . .
+
+# 设置构建环境变量
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# 构建应用
+RUN pnpm build
+
+# ==========================================
+# 阶段4: 生产运行时
+# ==========================================
+FROM node:${NODE_VERSION} AS production
+
+# 安装pnpm
+RUN npm install -g pnpm@9.12.2
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+# 设置环境变量
+ENV NODE_ENV=production
+ENV EDITION=SELF_HOSTED
+ENV DEPLOY_ENV=PRODUCTION
+ENV CONSOLE_API_URL=http://127.0.0.1:5001
+ENV APP_API_URL=http://127.0.0.1:5001
+ENV MARKETPLACE_API_URL=http://127.0.0.1:5001
+ENV MARKETPLACE_URL=http://127.0.0.1:5001
+ENV PORT=3000
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PM2_INSTANCES=2
+
+# 设置时区
+ENV TZ=UTC
+RUN ln -s /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone
+
+# 创建工作目录
+WORKDIR /app/web
+
+# 复制构建产物
+COPY --from=builder /app/web/public ./public
+COPY --from=builder /app/web/.next/standalone ./
+COPY --from=builder /app/web/.next/static ./.next/static
+
+# 复制启动脚本
+COPY docker/entrypoint.sh ./entrypoint.sh
+
+# 安装全局运行时包并设置权限
+RUN pnpm add -g pm2 \
+    && mkdir /.pm2 \
+    && addgroup -g 1001 -S nodejs \
+    && adduser -S nextjs -u 1001 -G nodejs \
+    && chown -R nextjs:nodejs /.pm2 /app/web \
+    && chmod -R g=u /.pm2 /app/web \
+    && chmod +x ./entrypoint.sh
+
+# 构建信息
+ARG COMMIT_SHA
+ENV COMMIT_SHA=${COMMIT_SHA}
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+# 切换到非root用户
+USER nextjs
+
+# 暴露端口
+EXPOSE 3000
+
+# 启动应用
+ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
+
+# ==========================================
+# 可选：静态文件服务阶段（用于纯静态部署）
+# ==========================================
+FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS static
+
+# 使用nginx用户
+USER nginx
+
+# 复制自定义nginx配置
+COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
+
+# 复制静态文件
+COPY --chown=nginx:nginx --from=builder /app/web/out /usr/share/nginx/html
+
+# 暴露端口
+EXPOSE 8080
+
+# 启动nginx
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]

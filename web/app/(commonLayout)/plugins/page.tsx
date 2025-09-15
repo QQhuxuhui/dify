@@ -1,8 +1,11 @@
-'use client'
 import PluginPage from '@/app/components/plugins/plugin-page'
 import PluginsPanel from '@/app/components/plugins/plugin-page/plugins-panel'
 import Marketplace from '@/app/components/plugins/marketplace'
 import NormalUserGuard from '@/components/route-guard/normal-user-guard'
+
+export const metadata = {
+  title: 'Plugins - Dify',
+}
 
 const PluginList = () => {
   return (
@@ -13,10 +16,6 @@ const PluginList = () => {
       />
     </NormalUserGuard>
   )
-}
-
-export const metadata = {
-  title: 'Plugins - Dify',
 }
 
 export default PluginList

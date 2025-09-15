@@ -8,14 +8,14 @@ USER root
 # 创建临时工作目录
 WORKDIR /tmp/custom
 
-# 复制修改后的前端文件
-COPY web/app/(commonLayout)/apps/Apps.tsx ./web/app/(commonLayout)/apps/Apps.tsx
-COPY web/app/(commonLayout)/apps/page.tsx ./web/app/(commonLayout)/apps/page.tsx
-COPY web/app/(commonLayout)/datasets/Container.tsx ./web/app/(commonLayout)/datasets/Container.tsx
-COPY web/app/(commonLayout)/datasets/Datasets.tsx ./web/app/(commonLayout)/datasets/Datasets.tsx
-COPY web/app/components/header/index.tsx ./web/app/components/header/index.tsx
-COPY web/app/page.tsx ./web/app/page.tsx
-COPY web/components/route-guard/normal-user-guard.tsx ./web/components/route-guard/normal-user-guard.tsx
+# 复制修改后的前端文件（现在从web目录内部构建）
+COPY app/(commonLayout)/apps/Apps.tsx ./web/app/(commonLayout)/apps/Apps.tsx
+COPY app/(commonLayout)/apps/page.tsx ./web/app/(commonLayout)/apps/page.tsx
+COPY app/(commonLayout)/datasets/Container.tsx ./web/app/(commonLayout)/datasets/Container.tsx
+COPY app/(commonLayout)/datasets/Datasets.tsx ./web/app/(commonLayout)/datasets/Datasets.tsx
+COPY app/components/header/index.tsx ./web/app/components/header/index.tsx
+COPY app/page.tsx ./web/app/page.tsx
+COPY components/route-guard/normal-user-guard.tsx ./web/components/route-guard/normal-user-guard.tsx
 
 # 备份原始文件并替换为修改后的文件
 RUN cd /app/web && \

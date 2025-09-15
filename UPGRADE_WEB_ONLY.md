@@ -34,7 +34,7 @@ docker-compose stop web
 docker commit dify-web-1 dify-web-backup:$(date +%Y%m%d_%H%M%S)
 
 # 3. 构建自定义镜像
-docker build -t custom-dify-web:1.1.3 -f docker/Dockerfile.web .
+cd web && docker build -t custom-dify-web:1.1.3 -f Dockerfile.custom . && cd ..
 
 # 4. 备份配置文件
 cp docker-compose.yaml docker-compose.yaml.backup
@@ -117,7 +117,7 @@ ls -la web/components/route-guard/normal-user-guard.tsx
 
 # 清理Docker缓存重试
 docker system prune -f
-docker build --no-cache -t custom-dify-web:1.1.3 -f docker/Dockerfile.web .
+cd web && docker build --no-cache -t custom-dify-web:1.1.3 -f Dockerfile.custom . && cd ..
 ```
 
 **Q: Web容器启动失败**
