@@ -19,16 +19,18 @@ WEB_IMAGE_NAME="custom-dify-web:${DIFY_VERSION}"
 API_IMAGE_NAME="custom-dify-api:${DIFY_VERSION}"
 WEB_OPENSOURCE_IMAGE_NAME="custom-dify-web-opensource:${DIFY_VERSION}"
 
-# 平台配置（支持客户ARM64服务器）
-PLATFORM="linux/arm64"
-DOCKER_BUILD_ARGS="--platform ${PLATFORM} --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --network=host"
-
 # 构建方式选择
 BUILD_MODE=${1:-"all"}  # all, web-only, api-only, web-opensource
+ARCH=${2:-"arm64"}      # arm64 (客户服务器), amd64 (本地开发)
+
+# 平台配置（支持客户ARM64服务器）
+PLATFORM="linux/${ARCH}"
+DOCKER_BUILD_ARGS="--platform ${PLATFORM} --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --load"
 
 echo -e "${YELLOW}📋 构建配置：${NC}"
 echo "Dify 版本: ${DIFY_VERSION}"
 echo "构建模式: ${BUILD_MODE}"
+echo "目标架构: ${ARCH}"
 echo "Web 镜像: ${WEB_IMAGE_NAME}"
 echo "API 镜像: ${API_IMAGE_NAME}"
 echo "Web 开源镜像: ${WEB_OPENSOURCE_IMAGE_NAME}"
@@ -49,7 +51,7 @@ build_web_custom() {
     echo "正在构建包含权限控制功能的Web镜像..."
 
     cd web
-    if docker build -f Dockerfile.custom -t ${WEB_IMAGE_NAME} .; then
+    if docker buildx build ${DOCKER_BUILD_ARGS} -f Dockerfile.custom -t ${WEB_IMAGE_NAME} .; then
         echo -e "${GREEN}✅ Web自定义镜像构建成功${NC}"
         WEB_BUILD_SUCCESS=true
     else
@@ -65,13 +67,13 @@ build_web_opensource() {
     echo "正在构建基于开源镜像的优化Web镜像..."
 
     cd web
-    if docker build --platform linux/arm64 --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --network=host -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME} --target production .; then
+    if docker buildx build ${DOCKER_BUILD_ARGS} -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME} --target production .; then
         echo -e "${GREEN}✅ Web开源镜像构建成功${NC}"
         WEB_OPENSOURCE_BUILD_SUCCESS=true
 
         # 可选：构建静态版本
         echo -e "${YELLOW}🔧 构建静态文件版本${NC}"
-        if docker build --platform linux/arm64 --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --network=host -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME}-static --target static .; then
+        if docker buildx build ${DOCKER_BUILD_ARGS} -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME}-static --target static .; then
             echo -e "${GREEN}✅ Web静态镜像构建成功${NC}"
         else
             echo -e "${YELLOW}⚠️  Web静态镜像构建失败（可选）${NC}"
@@ -89,7 +91,7 @@ build_api() {
     echo "正在构建包含检索增强功能的API镜像..."
 
     cd api
-    if docker build -f Dockerfile.custom -t ${API_IMAGE_NAME} .; then
+    if docker buildx build ${DOCKER_BUILD_ARGS} -f Dockerfile.custom -t ${API_IMAGE_NAME} .; then
         echo -e "${GREEN}✅ API镜像构建成功${NC}"
         API_BUILD_SUCCESS=true
     else
@@ -121,7 +123,10 @@ case ${BUILD_MODE} in
         ;;
     *)
         echo -e "${RED}❌ 无效的构建模式: ${BUILD_MODE}${NC}"
-        echo "支持的模式: all, web-only, web-opensource, api-only"
+        echo "用法: $0 [构建模式] [架构]"
+        echo "构建模式: all, web-only, web-opensource, api-only"
+        echo "架构: arm64 (客户服务器), amd64 (本地开发)"
+        echo "示例: $0 web-opensource arm64"
         exit 1
         ;;
 esac
