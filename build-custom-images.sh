@@ -19,6 +19,10 @@ WEB_IMAGE_NAME="custom-dify-web:${DIFY_VERSION}"
 API_IMAGE_NAME="custom-dify-api:${DIFY_VERSION}"
 WEB_OPENSOURCE_IMAGE_NAME="custom-dify-web-opensource:${DIFY_VERSION}"
 
+# 平台配置（支持客户ARM64服务器）
+PLATFORM="linux/arm64"
+DOCKER_BUILD_ARGS="--platform ${PLATFORM} --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --network=host"
+
 # 构建方式选择
 BUILD_MODE=${1:-"all"}  # all, web-only, api-only, web-opensource
 
@@ -61,13 +65,13 @@ build_web_opensource() {
     echo "正在构建基于开源镜像的优化Web镜像..."
 
     cd web
-    if docker build -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME} --target production .; then
+    if docker build --platform linux/arm64 --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --network=host -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME} --target production .; then
         echo -e "${GREEN}✅ Web开源镜像构建成功${NC}"
         WEB_OPENSOURCE_BUILD_SUCCESS=true
 
         # 可选：构建静态版本
         echo -e "${YELLOW}🔧 构建静态文件版本${NC}"
-        if docker build -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME}-static --target static .; then
+        if docker build --platform linux/arm64 --build-arg HTTP_PROXY=http://127.0.0.1:10809 --build-arg HTTPS_PROXY=http://127.0.0.1:10809 --build-arg NO_PROXY=localhost,127.0.0.1 --network=host -f Dockerfile.opensource -t ${WEB_OPENSOURCE_IMAGE_NAME}-static --target static .; then
             echo -e "${GREEN}✅ Web静态镜像构建成功${NC}"
         else
             echo -e "${YELLOW}⚠️  Web静态镜像构建失败（可选）${NC}"
