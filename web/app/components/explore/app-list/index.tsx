@@ -39,7 +39,8 @@ const Apps = ({
   onSuccess,
 }: AppsProps) => {
   const { t } = useTranslation()
-  const { isCurrentWorkspaceEditor } = useAppContext()
+  const { isCurrentWorkspaceEditor, currentWorkspace } = useAppContext()
+  const isNormalUser = currentWorkspace.role === 'normal'
   const { push } = useRouter()
   const { hasEditPermission } = useContext(ExploreContext)
   const allCategoriesEn = t('explore.apps.allCategories', { lng: 'en' })
@@ -151,6 +152,28 @@ const Apps = ({
     catch (e) {
       Toast.notify({ type: 'error', message: t('app.newApp.appCreateFailed') })
     }
+  }
+
+  // 普通用户显示简化版探索页面
+  if (isNormalUser) {
+    return (
+      <div className={cn(
+        'flex h-full flex-col border-l-[0.5px] border-divider-regular',
+      )}>
+        <div className='shrink-0 px-12 pt-6'>
+          <div className={`mb-1 ${s.textGradient} text-xl font-semibold`}>{t('explore.apps.title')}</div>
+          <div className='text-sm text-text-tertiary'>通过探索页面体验工作区的对话功能</div>
+        </div>
+
+        <div className='flex h-full items-center justify-center'>
+          <div className='text-center'>
+            <div className='mb-2 text-lg font-medium text-text-secondary'>🎯 工作区对话功能</div>
+            <div className='mb-4 text-sm text-text-tertiary'>您可以在这里体验与AI助手的对话交流</div>
+            <div className='text-xs text-text-quaternary'>如需创建和管理应用，请联系管理员开通权限</div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!categories || categories.length === 0) {
