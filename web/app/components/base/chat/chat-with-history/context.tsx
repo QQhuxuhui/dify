@@ -48,12 +48,14 @@ export type ChatWithHistoryContextValue = {
   handleFeedback: (messageId: string, feedback: Feedback) => void
   currentChatInstanceRef: RefObject<{ handleStop: () => void }>
   themeBuilder?: ThemeBuilder
-  sidebarCollapseState?: boolean
+  sidebarCollapseState: boolean
   handleSidebarCollapse: (state: boolean) => void
-  clearChatList?: boolean
+  clearChatList: boolean
   setClearChatList: (state: boolean) => void
-  isResponding?: boolean
-  setIsResponding: (state: boolean) => void,
+  isResponding: boolean
+  setIsResponding: (state: boolean) => void
+  isFullScreenMode: boolean
+  setIsFullScreenMode: (state: boolean) => void
 }
 
 export const ChatWithHistoryContext = createContext<ChatWithHistoryContextValue>({
@@ -85,5 +87,7 @@ export const ChatWithHistoryContext = createContext<ChatWithHistoryContextValue>
   setClearChatList: () => {},
   isResponding: false,
   setIsResponding: () => {},
+  isFullScreenMode: false,
+  setIsFullScreenMode: () => {},
 })
 export const useChatWithHistoryContext = () => useContext(ChatWithHistoryContext)

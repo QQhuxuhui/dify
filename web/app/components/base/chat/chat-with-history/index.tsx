@@ -14,6 +14,11 @@ import Sidebar from './sidebar'
 import Header from './header'
 import HeaderInMobile from './header-in-mobile'
 import ChatWrapper from './chat-wrapper'
+import {
+  getEdgeCompatibleClassName,
+  isEdgeBrowser,
+  optimizeForEdge,
+} from './utils/edge-compatibility'
 import type { InstalledApp } from '@/models/explore'
 import Loading from '@/app/components/base/loading'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
@@ -36,12 +41,19 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
     isMobile,
     themeBuilder,
     sidebarCollapseState,
+    isFullScreenMode,
   } = useChatWithHistoryContext()
   const isSidebarCollapsed = sidebarCollapseState
   const customConfig = appData?.custom_config
   const site = appData?.site
 
   const [showSidePanel, setShowSidePanel] = useState(false)
+
+  // Initialize Edge compatibility optimizations
+  useEffect(() => {
+    if (isEdgeBrowser())
+      optimizeForEdge()
+  }, [])
 
   useEffect(() => {
     themeBuilder?.buildTheme(site?.chat_color_theme, site?.chat_color_theme_inverted)
@@ -69,9 +81,11 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
     <div className={cn(
       'flex h-full bg-background-default-burn',
       isMobile && 'flex-col',
+      getEdgeCompatibleClassName(''),
+      isFullScreenMode && 'fullscreen-mode',
       className,
     )}>
-      {!isMobile && (
+      {!isMobile && !isFullScreenMode && (
         <div className={cn(
           'flex w-[236px] flex-col p-1 pr-0 transition-all duration-200 ease-in-out',
           isSidebarCollapsed && 'w-0 overflow-hidden !p-0',
@@ -83,7 +97,7 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
         <HeaderInMobile />
       )}
       <div className={cn('relative grow p-2', isMobile && 'h-[calc(100%_-_56px)] p-0')}>
-        {isSidebarCollapsed && (
+        {isSidebarCollapsed && !isFullScreenMode && (
           <div
             className={cn(
               'absolute top-0 z-20 flex h-full w-[256px] flex-col p-2 transition-all duration-500 ease-in-out',
@@ -112,10 +126,12 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
 export type ChatWithHistoryWrapProps = {
   installedAppInfo?: InstalledApp
   className?: string
+  isFullScreenMode?: boolean
 }
 const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
   installedAppInfo,
   className,
+  isFullScreenMode,
 }) => {
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -157,7 +173,9 @@ const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
     setClearChatList,
     isResponding,
     setIsResponding,
-  } = useChatWithHistory(installedAppInfo)
+    isFullScreenMode: currentFullScreenMode,
+    setIsFullScreenMode,
+  } = useChatWithHistory(installedAppInfo, isFullScreenMode)
 
   return (
     <ChatWithHistoryContext.Provider value={{
@@ -198,6 +216,8 @@ const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
       setClearChatList,
       isResponding,
       setIsResponding,
+      isFullScreenMode: currentFullScreenMode,
+      setIsFullScreenMode,
     }}>
       <ChatWithHistory className={className} />
     </ChatWithHistoryContext.Provider>
@@ -207,6 +227,7 @@ const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
 const ChatWithHistoryWrapWithCheckToken: FC<ChatWithHistoryWrapProps> = ({
   installedAppInfo,
   className,
+  isFullScreenMode,
 }) => {
   const [initialized, setInitialized] = useState(false)
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false)
@@ -242,6 +263,7 @@ const ChatWithHistoryWrapWithCheckToken: FC<ChatWithHistoryWrapProps> = ({
     <ChatWithHistoryWrap
       installedAppInfo={installedAppInfo}
       className={className}
+      isFullScreenMode={isFullScreenMode}
     />
   )
 }

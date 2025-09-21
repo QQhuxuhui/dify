@@ -1,6 +1,7 @@
 'use client'
 import type { FC } from 'react'
 import React from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useContext } from 'use-context-selector'
 import ExploreContext from '@/context/explore-context'
 import TextGenerationApp from '@/app/components/share/text-generation'
@@ -15,6 +16,8 @@ const InstalledApp: FC<IInstalledAppProps> = ({
   id,
 }) => {
   const { installedApps } = useContext(ExploreContext)
+  const searchParams = useSearchParams()
+  const isFullScreenMode = searchParams.get('fullscreen') === 'true'
   const installedApp = installedApps.find(item => item.id === id)
 
   if (!installedApp) {
@@ -28,7 +31,11 @@ const InstalledApp: FC<IInstalledAppProps> = ({
   return (
     <div className='h-full py-2 pl-0 pr-2 sm:p-2'>
       {installedApp.app.mode !== 'completion' && installedApp.app.mode !== 'workflow' && (
-        <ChatWithHistory installedAppInfo={installedApp} className='overflow-hidden rounded-2xl shadow-md' />
+        <ChatWithHistory
+          installedAppInfo={installedApp}
+          className='overflow-hidden rounded-2xl shadow-md'
+          isFullScreenMode={isFullScreenMode}
+        />
       )}
       {installedApp.app.mode === 'completion' && (
         <TextGenerationApp isInstalledApp installedAppInfo={installedApp}/>
