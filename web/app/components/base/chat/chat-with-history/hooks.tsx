@@ -152,7 +152,7 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
 
   const [clearChatList, setClearChatList] = useState(false)
   const [isResponding, setIsResponding] = useState(false)
-  const [isFullScreenMode, setIsFullScreenMode] = useState<boolean>(false)
+  const [isFullScreenMode, setIsFullScreenMode] = useState<boolean>(true)
   const appPrevChatTree = useMemo(
     () => (currentConversationId && appChatListData?.data.length)
       ? buildChatItemTree(getFormattedChatList(appChatListData.data))
