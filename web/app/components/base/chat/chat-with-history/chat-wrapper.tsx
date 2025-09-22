@@ -188,7 +188,7 @@ const ChatWrapper = () => {
       return null
     if (welcomeMessage.suggestedQuestions && welcomeMessage.suggestedQuestions?.length > 0) {
       return (
-        <div className='flex h-[50vh] items-center justify-center px-4 py-12'>
+        <div className='flex h-[30vh] items-center justify-center px-4 py-8'>
           <div className='flex max-w-[720px] grow gap-4'>
             <AppIcon
               size='xl'
@@ -206,7 +206,7 @@ const ChatWrapper = () => {
       )
     }
     return (
-      <div className={cn('flex h-[50vh] flex-col items-center justify-center gap-3 py-12')}>
+      <div className={cn('flex h-[30vh] flex-col items-center justify-center gap-3 py-8')}>
         <AppIcon
           size='xl'
           iconType={appData?.site.icon_type}
@@ -230,9 +230,12 @@ const ChatWrapper = () => {
     />
     : null
 
+  // 检测是否为空聊天状态（无聊天记录或只有欢迎消息）
+  const isEmpty = messageList.length === 0 || (messageList.length === 1 && messageList[0].isOpeningStatement)
+
   return (
     <div
-      className='h-full overflow-hidden bg-chatbot-bg'
+      className={cn('h-full overflow-hidden bg-chatbot-bg', isEmpty && 'chat-empty-state')}
     >
       <Chat
         appData={appData}
@@ -240,8 +243,8 @@ const ChatWrapper = () => {
         chatList={messageList}
         isResponding={respondingState}
         chatContainerInnerClassName={`mx-auto pt-6 w-full max-w-[768px] ${isMobile && 'px-4'}`}
-        chatFooterClassName='pb-4'
-        chatFooterInnerClassName={`mx-auto w-full max-w-[768px] ${isMobile ? 'px-2' : 'px-4'}`}
+        chatFooterClassName={isEmpty ? 'chat-centered-input-container' : 'pb-4'}
+        chatFooterInnerClassName={isEmpty ? 'chat-input-centered' : `mx-auto w-full max-w-[768px] ${isMobile ? 'px-2' : 'px-4'}`}
         onSend={doSend}
         inputs={currentConversationId ? currentConversationItem?.inputs as any : newConversationInputs}
         inputsForm={inputsForms}

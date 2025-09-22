@@ -120,6 +120,72 @@
   border-top: 1px solid #e5e7eb !important;
 }
 
+/* 聊天输入框居中样式 - 仿DeepSeek网页版 */
+.chat-centered-input-container {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 90% !important;
+  max-width: 600px !important;
+  background: transparent !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+  z-index: 10 !important;
+}
+
+/* 无聊天记录时，输入框稍微偏上一点（类似DeepSeek） */
+.chat-empty-state .chat-centered-input-container {
+  top: 45% !important;
+}
+
+/* 聊天输入框居中样式 */
+.chat-input-centered {
+  position: static !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  margin: 0 auto !important;
+  background: transparent !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* 输入框内部容器居中 */
+.chat-input-centered > div {
+  width: 100% !important;
+  max-width: 600px !important;
+  margin: 0 auto !important;
+}
+
+/* 确保输入框样式优化 */
+.chat-centered-input-container .relative.z-10.rounded-xl,
+.chat-input-centered .relative.z-10.rounded-xl {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 全屏模式下的居中输入框 */
+.fullscreen-mode .chat-centered-input-container {
+  max-width: 700px !important;
+  width: 95% !important;
+}
+
+.fullscreen-mode.chat-empty-state .chat-centered-input-container {
+  top: 42% !important;
+}
+
+.fullscreen-mode .chat-input-centered {
+  max-width: 700px !important;
+}
+
+.fullscreen-mode .chat-input-centered > div {
+  max-width: 700px !important;
+}
+
 /* 全屏模式在所有设备上都占满整个浏览器 */
 @media (max-width: 640px) {
   .fullscreen-mode .chat-content,
@@ -131,12 +197,36 @@
   .fullscreen-mode .chat-wrapper > *:last-child {
     padding: 0.5rem !important;
   }
+
+  .chat-centered-input-container {
+    width: 95% !important;
+    max-width: 90% !important;
+  }
+
+  .chat-input-centered {
+    max-width: 100% !important;
+  }
+
+  .fullscreen-mode .chat-centered-input-container {
+    width: 98% !important;
+    max-width: 95% !important;
+  }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
   .fullscreen-mode .chat-content,
   .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
     padding: 1rem !important;
+  }
+
+  .chat-centered-input-container {
+    width: 92% !important;
+    max-width: 580px !important;
+  }
+
+  .fullscreen-mode .chat-centered-input-container {
+    width: 95% !important;
+    max-width: 650px !important;
   }
 }
 
