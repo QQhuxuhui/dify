@@ -588,6 +588,7 @@ services:
       PIP_MIRROR_URL: ${PIP_MIRROR_URL:-}
     ports:
       - "${EXPOSE_PLUGIN_DEBUGGING_PORT:-5003}:${PLUGIN_DEBUGGING_PORT:-5003}"
+      - "5002:5002"
     volumes:
       - ./volumes/plugin_daemon:/app/storage
     depends_on:
