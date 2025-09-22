@@ -48,7 +48,8 @@ const Form = () => {
   const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
   const { mutate } = useSWRConfig()
-  const { isCurrentWorkspaceDatasetOperator } = useAppContext()
+  const { isCurrentWorkspaceDatasetOperator, currentWorkspace } = useAppContext()
+  const isLimitedUser = currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
   const { dataset: currentDataset, mutateDatasetRes: mutateDatasets } = useContext(DatasetDetailContext)
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState(currentDataset?.name ?? '')
@@ -273,32 +274,36 @@ const Form = () => {
               isInRetrievalSetting={true}
             />
           </div>
-          <div className='my-1 h-0 w-full border-b border-divider-subtle' />
-          <div className={rowClass}>
-            <div className={labelClass}>
-              <div className='system-sm-semibold text-text-secondary'>{t('datasetSettings.form.externalKnowledgeAPI')}</div>
-            </div>
-            <div className='w-full'>
-              <div className='flex h-full items-center gap-1 rounded-lg bg-components-input-bg-normal px-3 py-2'>
-                <ApiConnectionMod className='h-4 w-4 text-text-secondary' />
-                <div className='system-sm-medium overflow-hidden text-ellipsis text-text-secondary'>
-                  {currentDataset?.external_knowledge_info.external_knowledge_api_name}
+          {!isLimitedUser && (
+            <>
+              <div className='my-1 h-0 w-full border-b border-divider-subtle' />
+              <div className={rowClass}>
+                <div className={labelClass}>
+                  <div className='system-sm-semibold text-text-secondary'>{t('datasetSettings.form.externalKnowledgeAPI')}</div>
                 </div>
-                <div className='system-xs-regular text-text-tertiary'>·</div>
-                <div className='system-xs-regular text-text-tertiary'>{currentDataset?.external_knowledge_info.external_knowledge_api_endpoint}</div>
+                <div className='w-full'>
+                  <div className='flex h-full items-center gap-1 rounded-lg bg-components-input-bg-normal px-3 py-2'>
+                    <ApiConnectionMod className='h-4 w-4 text-text-secondary' />
+                    <div className='system-sm-medium overflow-hidden text-ellipsis text-text-secondary'>
+                      {currentDataset?.external_knowledge_info.external_knowledge_api_name}
+                    </div>
+                    <div className='system-xs-regular text-text-tertiary'>·</div>
+                    <div className='system-xs-regular text-text-tertiary'>{currentDataset?.external_knowledge_info.external_knowledge_api_endpoint}</div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className={rowClass}>
-            <div className={labelClass}>
-              <div className='system-sm-semibold text-text-secondary'>{t('datasetSettings.form.externalKnowledgeID')}</div>
-            </div>
-            <div className='w-full'>
-              <div className='flex h-full items-center gap-1 rounded-lg bg-components-input-bg-normal px-3 py-2'>
-                <div className='system-xs-regular text-text-tertiary'>{currentDataset?.external_knowledge_info.external_knowledge_id}</div>
+              <div className={rowClass}>
+                <div className={labelClass}>
+                  <div className='system-sm-semibold text-text-secondary'>{t('datasetSettings.form.externalKnowledgeID')}</div>
+                </div>
+                <div className='w-full'>
+                  <div className='flex h-full items-center gap-1 rounded-lg bg-components-input-bg-normal px-3 py-2'>
+                    <div className='system-xs-regular text-text-tertiary'>{currentDataset?.external_knowledge_info.external_knowledge_id}</div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </>
         : indexMethod
           ? <>
