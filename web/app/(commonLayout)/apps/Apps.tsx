@@ -56,7 +56,7 @@ const Apps = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator, currentWorkspace } = useAppContext()
-  const isNormalUser = currentWorkspace.role === 'normal'
+  const isLimitedUser = currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
   const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
   const [activeTab, setActiveTab] = useTabSearchParams({
     defaultTab: 'all',
@@ -80,7 +80,7 @@ const Apps = () => {
 
   const anchorRef = useRef<HTMLDivElement>(null)
 
-  // 普通用户只显示聊天助手相关的应用类型
+  // 普通用户和编辑者只显示聊天助手相关的应用类型
   const allOptions = [
     { value: 'all', text: t('app.types.all'), icon: <RiApps2Line className='mr-1 h-[14px] w-[14px]' /> },
     { value: 'chat', text: t('app.types.chatbot'), icon: <RiMessage3Line className='mr-1 h-[14px] w-[14px]' /> },
@@ -97,7 +97,7 @@ const Apps = () => {
     { value: 'advanced-chat', text: t('app.types.advanced'), icon: <RiMessage3Line className='mr-1 h-[14px] w-[14px]' /> },
   ]
 
-  const options = isNormalUser ? chatOptions : allOptions
+  const options = isLimitedUser ? chatOptions : allOptions
 
   useEffect(() => {
     document.title = `${t('common.menus.apps')} - Dify`
@@ -176,7 +176,7 @@ const Apps = () => {
       {(data && data[0].total > 0)
         ? <div className='relative grid grow grid-cols-1 content-start gap-4 px-12 pt-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 2k:grid-cols-6'>
           {/* 编辑者和普通用户都可以创建应用 */}
-          {(isCurrentWorkspaceEditor || isNormalUser)
+          {(isCurrentWorkspaceEditor || isLimitedUser)
             && <NewAppCard onSuccess={mutate} />}
           {data.map(({ data: apps }) => apps.map(app => (
             <AppCard key={app.id} app={app} onRefresh={mutate} />
@@ -184,7 +184,7 @@ const Apps = () => {
         </div>
         : <div className='relative grid grow grid-cols-1 content-start gap-4 overflow-hidden px-12 pt-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 2k:grid-cols-6'>
           {/* 编辑者和普通用户都可以创建应用 */}
-          {(isCurrentWorkspaceEditor || isNormalUser)
+          {(isCurrentWorkspaceEditor || isLimitedUser)
             && <NewAppCard className='z-10' onSuccess={mutate} />}
           <NoAppsFound />
         </div>}

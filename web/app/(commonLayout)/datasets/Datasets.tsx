@@ -49,7 +49,7 @@ const Datasets = ({
   includeAll,
 }: Props) => {
   const { isCurrentWorkspaceEditor, currentWorkspace } = useAppContext()
-  const isNormalUser = currentWorkspace.role === 'normal'
+  const isLimitedUser = currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
   const { data, isLoading, setSize, mutate } = useSWRInfinite(
     (pageIndex: number, previousPageData: DataSetListResponse) => getKey(pageIndex, previousPageData, tags, keywords, includeAll),
     fetchDatasets,
@@ -89,7 +89,7 @@ const Datasets = ({
   return (
     <nav className='grid shrink-0 grow grid-cols-1 content-start gap-4 px-12 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
       {/* 编辑者和普通用户都可以创建知识库 */}
-      { (isCurrentWorkspaceEditor || isNormalUser) && <NewDatasetCard ref={anchorRef} /> }
+      { (isCurrentWorkspaceEditor || isLimitedUser) && <NewDatasetCard ref={anchorRef} /> }
       {data?.map(({ data: datasets }) => datasets.map(dataset => (
         <DatasetCard key={dataset.id} dataset={dataset} onSuccess={mutate} />),
       ))}

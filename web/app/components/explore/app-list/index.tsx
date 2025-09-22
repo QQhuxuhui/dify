@@ -40,7 +40,7 @@ const Apps = ({
 }: AppsProps) => {
   const { t } = useTranslation()
   const { isCurrentWorkspaceEditor, currentWorkspace } = useAppContext()
-  const isNormalUser = currentWorkspace.role === 'normal'
+  const isLimitedUser = currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
   const { push } = useRouter()
   const { hasEditPermission } = useContext(ExploreContext)
   const allCategoriesEn = t('explore.apps.allCategories', { lng: 'en' })
@@ -154,8 +154,8 @@ const Apps = ({
     }
   }
 
-  // 普通用户显示简化版探索页面
-  if (isNormalUser) {
+  // 普通用户和编辑者显示简化版探索页面
+  if (isLimitedUser) {
     return (
       <div className={cn(
         'flex h-full flex-col border-l-[0.5px] border-divider-regular',

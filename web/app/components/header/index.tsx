@@ -30,7 +30,7 @@ const navClassName = `
 
 const Header = () => {
   const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator, currentWorkspace } = useAppContext()
-  const isNormalUser = currentWorkspace.role === 'normal'
+  const isLimitedUser = currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
   const selectedSegment = useSelectedLayoutSegment()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -86,8 +86,8 @@ const Header = () => {
       {
         !isMobile && (
           <div className='flex items-center'>
-            {/* 普通用户显示探索和数据集（知识库）功能，不显示应用（工作室） */}
-            {isNormalUser ? (
+            {/* 普通用户和编辑者显示探索和数据集（知识库）功能，不显示应用（工作室） */}
+            {isLimitedUser ? (
               <>
                 <ExploreNav className={navClassName} />
                 <DatasetNav />
@@ -104,8 +104,8 @@ const Header = () => {
         )
       }
       <div className='flex shrink-0 items-center'>
-        {!isNormalUser && <EnvNav />}
-        {!isNormalUser && (
+        {!isLimitedUser && <EnvNav />}
+        {!isLimitedUser && (
           <div className='mr-3'>
             <PluginsNav />
           </div>
@@ -115,8 +115,8 @@ const Header = () => {
       {
         (isMobile && isShowNavMenu) && (
           <div className='flex w-full flex-col gap-y-1 p-2'>
-            {/* 移动端普通用户显示探索和数据集（知识库）功能，不显示应用（工作室） */}
-            {isNormalUser ? (
+            {/* 移动端普通用户和编辑者显示探索和数据集（知识库）功能，不显示应用（工作室） */}
+            {isLimitedUser ? (
               <>
                 <ExploreNav className={navClassName} />
                 <DatasetNav />

@@ -30,7 +30,7 @@ const Explore: FC<IExploreProps> = ({
       if (!accounts)
         return
       const currUser = accounts.find(account => account.id === userProfile.id)
-      setHasEditPermission(currUser?.role !== 'normal')
+      setHasEditPermission(currUser?.role !== 'normal' && currUser?.role !== 'editor')
     })()
   }, [])
 
