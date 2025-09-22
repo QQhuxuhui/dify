@@ -3,6 +3,7 @@ import {
   useEffect,
   useState,
 } from 'react'
+import './styles.css'
 import { useAsyncEffect } from 'ahooks'
 import { useThemeContext } from '../embedded-chatbot/theme/theme-context'
 import {
@@ -96,7 +97,11 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
       {isMobile && (
         <HeaderInMobile />
       )}
-      <div className={cn('relative grow p-2', isMobile && 'h-[calc(100%_-_56px)] p-0')}>
+      <div className={cn(
+        'relative grow',
+        isMobile ? 'h-[calc(100%_-_56px)] p-0' : 'p-2',
+        isFullScreenMode && 'fullscreen-chat-container',
+      )}>
         {isSidebarCollapsed && !isFullScreenMode && (
           <div
             className={cn(
@@ -109,7 +114,11 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
             <Sidebar isPanel />
           </div>
         )}
-        <div className={cn('flex h-full flex-col overflow-hidden border-[0,5px] border-components-panel-border-subtle bg-chatbot-bg', isMobile ? 'rounded-t-2xl' : 'rounded-2xl')}>
+        <div className={cn(
+          'flex h-full flex-col overflow-hidden border-[0,5px] border-components-panel-border-subtle bg-chatbot-bg',
+          isMobile ? 'rounded-t-2xl' : 'rounded-2xl',
+          isFullScreenMode && 'chat-panel',
+        )}>
           {!isMobile && <Header />}
           {appChatListDataLoading && (
             <Loading type='app' />
