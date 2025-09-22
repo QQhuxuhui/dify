@@ -25,42 +25,43 @@
   transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
 }
 
-/* 全屏模式下的主内容区域 */
+/* 全屏模式下的主内容区域 - 占满整个浏览器 */
 .fullscreen-mode .fullscreen-chat-container {
-  height: 100vh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   width: 100vw !important;
-  padding: 2rem !important;
+  height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  position: relative !important;
+  background: var(--color-background-default-burn, #f8fafc) !important;
 }
 
-/* 全屏模式下的聊天容器 */
-.fullscreen-mode .fullscreen-chat-container .chat-panel {
-  max-width: 800px !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-  position: relative !important;
-  top: -5vh !important; /* 略高于中心位置，约60%位置 */
-}
-
-/* 全屏模式下的聊天面板样式 */
+/* 全屏模式下的聊天面板 - 占满整个容器 */
 .fullscreen-mode .chat-panel {
-  border-radius: 1rem !important;
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   background: white !important;
-  height: 80vh !important;
-  min-height: 600px !important;
-  width: 100% !important;
-  max-width: 800px !important;
   display: flex !important;
   flex-direction: column !important;
   transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
   transform: scale(1) !important;
   opacity: 1 !important;
-  margin: 0 auto !important;
+  max-width: none !important;
+  min-height: none !important;
 }
 
 /* 全屏模式进入动画 */
@@ -76,61 +77,77 @@
               transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
 }
 
-/* 确保聊天内容在全屏模式下正确显示 */
+/* 全屏模式下的聊天内容容器 - 占满整个面板 */
 .fullscreen-mode .chat-wrapper {
-  height: 100% !important;
-  width: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  flex: 1 !important;
+  background: white !important;
+}
+
+/* 全屏模式下的Header区域 */
+.fullscreen-mode .chat-wrapper > *:first-child {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  z-index: 10 !important;
 }
 
 /* 全屏模式下的聊天内容区域 */
-.fullscreen-mode .chat-content {
+.fullscreen-mode .chat-content,
+.fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
   flex: 1 !important;
   width: 100% !important;
+  height: auto !important;
   overflow-y: auto !important;
+  padding: 1rem !important;
 }
 
 /* 全屏模式下的输入框区域 */
-.fullscreen-mode .chat-input-area {
-  width: 100% !important;
-  flex-shrink: 0 !important;
-}
-
-/* 全屏模式下的Header */
-.fullscreen-mode .chat-panel .header {
+.fullscreen-mode .chat-input-area,
+.fullscreen-mode .chat-wrapper > *:last-child {
   flex-shrink: 0 !important;
   width: 100% !important;
+  padding: 1rem !important;
+  background: white !important;
+  border-top: 1px solid #e5e7eb !important;
 }
 
-/* 响应式处理 - 移动设备 */
+/* 全屏模式在所有设备上都占满整个浏览器 */
 @media (max-width: 640px) {
-  .fullscreen-mode .fullscreen-chat-container {
+  .fullscreen-mode .chat-content,
+  .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
+    padding: 0.5rem !important;
+  }
+
+  .fullscreen-mode .chat-input-area,
+  .fullscreen-mode .chat-wrapper > *:last-child {
+    padding: 0.5rem !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .fullscreen-mode .chat-content,
+  .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
     padding: 1rem !important;
   }
-
-  .fullscreen-mode .chat-panel {
-    height: 90vh !important;
-    min-height: 500px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    top: 0 !important;
-  }
 }
 
-/* 响应式处理 - 平板设备 */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .fullscreen-mode .chat-panel {
-    max-width: 700px !important;
-    height: 85vh !important;
+@media (min-width: 1025px) {
+  .fullscreen-mode .chat-content,
+  .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
+    padding: 1.5rem !important;
   }
-}
 
-/* 响应式处理 - 大屏幕 */
-@media (min-width: 1200px) {
-  .fullscreen-mode .chat-panel {
-    max-width: 900px !important;
-    height: 75vh !important;
+  .fullscreen-mode .chat-input-area,
+  .fullscreen-mode .chat-wrapper > *:last-child {
+    padding: 1.5rem !important;
   }
 }
