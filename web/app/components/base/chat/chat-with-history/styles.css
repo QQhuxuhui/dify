@@ -168,6 +168,49 @@
   border: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
 
+/* 居中header样式 - 仿DeepSeek网页版 */
+.chat-centered-header {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -150%) !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+/* 标题文字样式 */
+.chat-centered-title {
+  font-size: 2.25rem !important;
+  font-weight: 700 !important;
+  line-height: 2.5rem !important;
+  color: #1f2937 !important;
+  text-align: center !important;
+  margin: 0 !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* icon容器样式 */
+.chat-centered-icon {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0.5rem !important;
+}
+
+/* 全屏模式下的header调整 */
+.fullscreen-mode .chat-centered-header {
+  transform: translate(-50%, -160%) !important;
+}
+
+.fullscreen-mode .chat-centered-title {
+  font-size: 2.5rem !important;
+  line-height: 1 !important;
+}
+
 /* 全屏模式下的居中输入框 */
 .fullscreen-mode .chat-centered-input-container {
   max-width: 700px !important;
@@ -211,6 +254,24 @@
     width: 98% !important;
     max-width: 95% !important;
   }
+
+  /* 移动设备下的header样式 */
+  .chat-centered-header {
+    transform: translate(-50%, -130%) !important;
+  }
+
+  .chat-centered-title {
+    font-size: 1.75rem !important;
+    line-height: 2rem !important;
+  }
+
+  .fullscreen-mode .chat-centered-header {
+    transform: translate(-50%, -140%) !important;
+  }
+
+  .fullscreen-mode .chat-centered-title {
+    font-size: 2rem !important;
+  }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
@@ -228,6 +289,24 @@
     width: 95% !important;
     max-width: 650px !important;
   }
+
+  /* 平板设备下的header样式 */
+  .chat-centered-header {
+    transform: translate(-50%, -145%) !important;
+  }
+
+  .chat-centered-title {
+    font-size: 2rem !important;
+    line-height: 2.25rem !important;
+  }
+
+  .fullscreen-mode .chat-centered-header {
+    transform: translate(-50%, -155%) !important;
+  }
+
+  .fullscreen-mode .chat-centered-title {
+    font-size: 2.25rem !important;
+  }
 }
 
 @media (min-width: 1025px) {
@@ -239,5 +318,24 @@
   .fullscreen-mode .chat-input-area,
   .fullscreen-mode .chat-wrapper > *:last-child {
     padding: 1.5rem !important;
+  }
+
+  /* 桌面设备下的header样式 */
+  .chat-centered-header {
+    transform: translate(-50%, -150%) !important;
+  }
+
+  .chat-centered-title {
+    font-size: 2.25rem !important;
+    line-height: 2.5rem !important;
+  }
+
+  .fullscreen-mode .chat-centered-header {
+    transform: translate(-50%, -160%) !important;
+  }
+
+  .fullscreen-mode .chat-centered-title {
+    font-size: 2.5rem !important;
+    line-height: 1 !important;
   }
 }

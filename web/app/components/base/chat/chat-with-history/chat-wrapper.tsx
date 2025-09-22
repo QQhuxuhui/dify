@@ -233,6 +233,30 @@ const ChatWrapper = () => {
   // 检测是否为空聊天状态（无聊天记录或只有欢迎消息）
   const isEmpty = messageList.length === 0 || (messageList.length === 1 && messageList[0].isOpeningStatement)
 
+  // 居中显示的logo和标题（仿DeepSeek样式）
+  const centeredHeader = useMemo(() => {
+    if (!isEmpty || !appData?.site) return null
+
+    return (
+      <div className="chat-centered-header">
+        <div className="mb-8 flex flex-col items-center justify-center gap-4">
+          <div className="chat-centered-icon">
+            <AppIcon
+              size={isMobile ? 'xl' : 'xxl'}
+              iconType={appData.site.icon_type}
+              icon={appData.site.icon}
+              background={appData.site.icon_background}
+              imageUrl={appData.site.icon_url}
+            />
+          </div>
+          <h1 className="chat-centered-title">
+            {appData.site.title}
+          </h1>
+        </div>
+      </div>
+    )
+  }, [isEmpty, appData?.site, isMobile])
+
   return (
     <div
       className={cn('h-full overflow-hidden bg-chatbot-bg', isEmpty && 'chat-empty-state')}
@@ -254,6 +278,7 @@ const ChatWrapper = () => {
           <>
             {chatNode}
             {welcome}
+            {centeredHeader}
           </>
         }
         allToolIcons={appMeta?.tool_icons || {}}
