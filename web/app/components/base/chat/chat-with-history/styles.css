@@ -123,7 +123,7 @@
 /* 聊天输入框居中样式 - 仿DeepSeek网页版 */
 .chat-centered-input-container {
   position: absolute !important;
-  top: 50% !important;
+  top: 54% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   width: 90% !important;
@@ -138,7 +138,7 @@
 
 /* 无聊天记录时，输入框稍微偏上一点（类似DeepSeek） */
 .chat-empty-state .chat-centered-input-container {
-  top: 45% !important;
+  top: 49% !important;
 }
 
 /* 聊天输入框居中样式 */
@@ -173,7 +173,7 @@
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
-  transform: translate(-50%, -150%) !important;
+  transform: translate(-50%, -120%) !important;
   width: 100% !important;
   display: flex !important;
   justify-content: center !important;
@@ -188,7 +188,7 @@
   font-weight: 700 !important;
   line-height: 2.5rem !important;
   color: #1f2937 !important;
-  text-align: center !important;
+  text-align: left !important;
   margin: 0 !important;
   letter-spacing: -0.025em !important;
 }
@@ -198,12 +198,12 @@
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  padding: 0.5rem !important;
+  padding: 0 !important;
 }
 
 /* 全屏模式下的header调整 */
 .fullscreen-mode .chat-centered-header {
-  transform: translate(-50%, -160%) !important;
+  transform: translate(-50%, -130%) !important;
 }
 
 .fullscreen-mode .chat-centered-title {
@@ -218,7 +218,7 @@
 }
 
 .fullscreen-mode.chat-empty-state .chat-centered-input-container {
-  top: 42% !important;
+  top: 46% !important;
 }
 
 .fullscreen-mode .chat-input-centered {
@@ -257,20 +257,20 @@
 
   /* 移动设备下的header样式 */
   .chat-centered-header {
-    transform: translate(-50%, -130%) !important;
+    transform: translate(-50%, -100%) !important;
   }
 
   .chat-centered-title {
-    font-size: 1.75rem !important;
-    line-height: 2rem !important;
+    font-size: 1.5rem !important;
+    line-height: 1.75rem !important;
   }
 
   .fullscreen-mode .chat-centered-header {
-    transform: translate(-50%, -140%) !important;
+    transform: translate(-50%, -110%) !important;
   }
 
   .fullscreen-mode .chat-centered-title {
-    font-size: 2rem !important;
+    font-size: 1.75rem !important;
   }
 }
 
@@ -292,20 +292,20 @@
 
   /* 平板设备下的header样式 */
   .chat-centered-header {
-    transform: translate(-50%, -145%) !important;
+    transform: translate(-50%, -115%) !important;
   }
 
   .chat-centered-title {
-    font-size: 2rem !important;
-    line-height: 2.25rem !important;
+    font-size: 1.875rem !important;
+    line-height: 2rem !important;
   }
 
   .fullscreen-mode .chat-centered-header {
-    transform: translate(-50%, -155%) !important;
+    transform: translate(-50%, -125%) !important;
   }
 
   .fullscreen-mode .chat-centered-title {
-    font-size: 2.25rem !important;
+    font-size: 2rem !important;
   }
 }
 
@@ -322,20 +322,20 @@
 
   /* 桌面设备下的header样式 */
   .chat-centered-header {
-    transform: translate(-50%, -150%) !important;
+    transform: translate(-50%, -120%) !important;
   }
 
   .chat-centered-title {
-    font-size: 2.25rem !important;
-    line-height: 2.5rem !important;
+    font-size: 2rem !important;
+    line-height: 2.25rem !important;
   }
 
   .fullscreen-mode .chat-centered-header {
-    transform: translate(-50%, -160%) !important;
+    transform: translate(-50%, -130%) !important;
   }
 
   .fullscreen-mode .chat-centered-title {
-    font-size: 2.5rem !important;
+    font-size: 2.25rem !important;
     line-height: 1 !important;
   }
 }

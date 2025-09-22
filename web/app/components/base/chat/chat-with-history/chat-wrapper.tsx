@@ -239,10 +239,10 @@ const ChatWrapper = () => {
 
     return (
       <div className="chat-centered-header">
-        <div className="mb-8 flex flex-col items-center justify-center gap-4">
+        <div className="mb-8 flex items-center justify-center gap-4">
           <div className="chat-centered-icon">
             <AppIcon
-              size={isMobile ? 'xl' : 'xxl'}
+              size={isMobile ? 'large' : 'xl'}
               iconType={appData.site.icon_type}
               icon={appData.site.icon}
               background={appData.site.icon_background}
