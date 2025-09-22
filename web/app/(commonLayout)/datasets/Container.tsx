@@ -39,9 +39,10 @@ const Container = () => {
   const [includeAll, { toggle: toggleIncludeAll }] = useBoolean(false)
 
   const options = useMemo(() => {
+    const isLimitedUser = currentWorkspace.role === 'dataset_operator' || currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
     return [
       { value: 'dataset', text: t('dataset.datasets') },
-      ...(currentWorkspace.role === 'dataset_operator' ? [] : [{ value: 'api', text: t('dataset.datasetsApi') }]),
+      ...(isLimitedUser ? [] : [{ value: 'api', text: t('dataset.datasetsApi') }]),
     ]
   }, [currentWorkspace.role, t])
 
