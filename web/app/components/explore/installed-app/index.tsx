@@ -17,7 +17,6 @@ const InstalledApp: FC<IInstalledAppProps> = ({
 }) => {
   const { installedApps } = useContext(ExploreContext)
   const searchParams = useSearchParams()
-  const isFullScreenMode = searchParams.get('fullscreen') === 'true'
   const installedApp = installedApps.find(item => item.id === id)
 
   if (!installedApp) {
@@ -34,7 +33,6 @@ const InstalledApp: FC<IInstalledAppProps> = ({
         <ChatWithHistory
           installedAppInfo={installedApp}
           className='overflow-hidden rounded-2xl shadow-md'
-          isFullScreenMode={isFullScreenMode}
         />
       )}
       {installedApp.app.mode === 'completion' && (

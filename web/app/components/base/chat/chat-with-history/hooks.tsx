@@ -69,7 +69,7 @@ function getFormattedChatList(messages: any[]) {
   return newChatList
 }
 
-export const useChatWithHistory = (installedAppInfo?: InstalledApp, initialFullScreenMode?: boolean) => {
+export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
   const isInstalledApp = useMemo(() => !!installedAppInfo, [installedAppInfo])
   const { data: appInfo, isLoading: appInfoLoading, error: appInfoError } = useSWR(installedAppInfo ? null : 'appInfo', fetchAppInfo)
 
@@ -152,7 +152,7 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp, initialFullS
 
   const [clearChatList, setClearChatList] = useState(false)
   const [isResponding, setIsResponding] = useState(false)
-  const [isFullScreenMode, setIsFullScreenMode] = useState<boolean>(initialFullScreenMode || false)
+  const [isFullScreenMode, setIsFullScreenMode] = useState<boolean>(false)
   const appPrevChatTree = useMemo(
     () => (currentConversationId && appChatListData?.data.length)
       ? buildChatItemTree(getFormattedChatList(appChatListData.data))

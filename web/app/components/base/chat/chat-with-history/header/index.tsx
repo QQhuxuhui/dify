@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react'
 import {
   RiEditBoxLine,
+  RiFullscreenExitLine,
+  RiFullscreenLine,
   RiLayoutRight2Line,
   RiResetLeftLine,
 } from '@remixicon/react'
@@ -34,6 +36,8 @@ const Header = () => {
     sidebarCollapseState,
     handleSidebarCollapse,
     isResponding,
+    isFullScreenMode,
+    setIsFullScreenMode,
   } = useChatWithHistoryContext()
   const { t } = useTranslation()
   const isSidebarCollapsed = sidebarCollapseState
@@ -69,6 +73,10 @@ const Header = () => {
     if (showRename)
       handleRenameConversation(showRename.id, newName, { onSuccess: handleCancelRename })
   }, [showRename, handleRenameConversation, handleCancelRename])
+
+  const handleToggleFullscreen = useCallback(() => {
+    setIsFullScreenMode(!isFullScreenMode)
+  }, [isFullScreenMode, setIsFullScreenMode])
 
   return (
     <>
@@ -125,6 +133,17 @@ const Header = () => {
           )}
         </div>
         <div className='flex items-center gap-1'>
+          <Tooltip
+            popupContent={isFullScreenMode ? '退出全屏' : '全屏显示'}
+          >
+            <ActionButton size='l' onClick={handleToggleFullscreen}>
+              {isFullScreenMode ? (
+                <RiFullscreenExitLine className='h-[18px] w-[18px]' />
+              ) : (
+                <RiFullscreenLine className='h-[18px] w-[18px]' />
+              )}
+            </ActionButton>
+          </Tooltip>
           {currentConversationId && (
             <Tooltip
               popupContent={t('share.chat.resetChat')}

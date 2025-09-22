@@ -9,6 +9,12 @@
   margin: 0 !important;
   padding: 0 !important;
   background: var(--color-background-default-burn, #f8fafc) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+}
+
+/* 非全屏模式的平滑过渡 */
+.chat-container-normal {
+  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
 }
 
 /* 全屏模式下的主内容区域 */
@@ -38,6 +44,22 @@
   height: 70vh !important;
   display: flex !important;
   flex-direction: column !important;
+  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+  transform: scale(1) !important;
+  opacity: 1 !important;
+}
+
+/* 全屏模式进入动画 */
+.fullscreen-mode.entering .chat-panel {
+  transform: scale(0.95) !important;
+  opacity: 0 !important;
+}
+
+/* 侧边栏隐藏/显示的平滑过渡 */
+.sidebar-transition {
+  transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+              opacity 0.3s ease-in-out,
+              transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
 }
 
 /* 确保聊天内容在全屏模式下正确显示 */
