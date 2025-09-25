@@ -11,8 +11,8 @@ const Home = () => {
 
   useEffect(() => {
     if (isLimitedUser) {
-      // 普通用户和编辑者跳转到数据集页面（知识库功能）
-      router.push('/datasets')
+      // 普通用户和编辑者跳转到探索页面
+      router.push('/explore/apps')
     }
     else {
       // 其他用户跳转到应用页面
