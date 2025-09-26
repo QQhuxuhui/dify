@@ -64,7 +64,7 @@ const Explore: FC<IExploreProps> = ({
           {workspaceCollapseState && (
             <button
               onClick={() => setWorkspaceCollapseState(false)}
-              className='absolute top-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-lg bg-background-default-hover shadow-md transition-all duration-200 hover:bg-background-default-hover hover:shadow-lg'
+              className='absolute top-2 left-6 z-20 flex h-4 w-8 items-center justify-center rounded-lg bg-background-default-hover shadow-md transition-all duration-200 hover:bg-background-default-hover hover:shadow-lg'
               title="显示工作区"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
