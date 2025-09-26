@@ -208,10 +208,10 @@
   transform: translate(-50%, -130%) !important;
 }
 
-.fullscreen-mode .chat-centered-title {
+/* .fullscreen-mode .chat-centered-title {
   font-size: 2.5rem !important;
   line-height: 1 !important;
-}
+} */
 
 /* 全屏模式下的居中输入框 */
 .fullscreen-mode .chat-centered-input-container {
