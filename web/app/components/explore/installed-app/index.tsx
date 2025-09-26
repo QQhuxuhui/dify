@@ -1,6 +1,6 @@
 'use client'
 import type { FC } from 'react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useContext } from 'use-context-selector'
 import ExploreContext from '@/context/explore-context'
@@ -19,9 +19,10 @@ const InstalledApp: FC<IInstalledAppProps> = ({
   const searchParams = useSearchParams()
   const installedApp = installedApps.find(item => item.id === id)
 
-  const handleWorkspaceInteraction = () => {
+  // 当聊天助手加载时自动隐藏工作区
+  useEffect(() => {
     setWorkspaceCollapseState(true)
-  }
+  }, [setWorkspaceCollapseState])
 
   if (!installedApp) {
     return (
@@ -32,7 +33,7 @@ const InstalledApp: FC<IInstalledAppProps> = ({
   }
 
   return (
-    <div className='h-full py-2 pl-0 pr-2 sm:p-2' onClick={handleWorkspaceInteraction}>
+    <div className='h-full py-2 pl-0 pr-2 sm:p-2'>
       {installedApp.app.mode !== 'completion' && installedApp.app.mode !== 'workflow' && (
         <ChatWithHistory
           installedAppInfo={installedApp}
