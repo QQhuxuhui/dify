@@ -15,9 +15,13 @@ export type IInstalledAppProps = {
 const InstalledApp: FC<IInstalledAppProps> = ({
   id,
 }) => {
-  const { installedApps } = useContext(ExploreContext)
+  const { installedApps, setWorkspaceCollapseState } = useContext(ExploreContext)
   const searchParams = useSearchParams()
   const installedApp = installedApps.find(item => item.id === id)
+
+  const handleWorkspaceInteraction = () => {
+    setWorkspaceCollapseState(true)
+  }
 
   if (!installedApp) {
     return (
@@ -28,7 +32,7 @@ const InstalledApp: FC<IInstalledAppProps> = ({
   }
 
   return (
-    <div className='h-full py-2 pl-0 pr-2 sm:p-2'>
+    <div className='h-full py-2 pl-0 pr-2 sm:p-2' onClick={handleWorkspaceInteraction}>
       {installedApp.app.mode !== 'completion' && installedApp.app.mode !== 'workflow' && (
         <ChatWithHistory
           installedAppInfo={installedApp}
