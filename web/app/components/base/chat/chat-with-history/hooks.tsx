@@ -69,7 +69,7 @@ function getFormattedChatList(messages: any[]) {
   return newChatList
 }
 
-export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
+export const useChatWithHistory = (installedAppInfo?: InstalledApp, autoNewChat?: boolean) => {
   const isInstalledApp = useMemo(() => !!installedAppInfo, [installedAppInfo])
   const { data: appInfo, isLoading: appInfoLoading, error: appInfoError } = useSWR(installedAppInfo ? null : 'appInfo', fetchAppInfo)
 
@@ -323,6 +323,18 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
     handleNewConversationInputsChange({})
     setClearChatList(true)
   }, [handleChangeConversation, setShowNewConversationItemInList, handleNewConversationInputsChange, setClearChatList])
+
+  // 自动触发新对话（当autoNewChat为true时）
+  useEffect(() => {
+    if (autoNewChat && !appInfoLoading && !appChatListDataLoading) {
+      // 延迟一点执行，确保组件完全加载完成
+      const timer = setTimeout(() => {
+        handleNewConversation()
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [autoNewChat, appInfoLoading, appChatListDataLoading, handleNewConversation])
+
   const handleUpdateConversationList = useCallback(() => {
     mutateAppConversationData()
     mutateAppPinnedConversationData()

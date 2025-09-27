@@ -11,7 +11,7 @@ const translation = {
     chatFormTip: 'Chat settings cannot be modified after the chat has started.',
     pinnedTitle: 'Pinned',
     unpinnedTitle: 'Recent',
-    newChatDefaultName: '新的对话',
+    newChatDefaultName: 'New Conversation',
     resetChat: 'Reset conversation',
     viewChatSettings: 'View chat settings',
     poweredBy: 'Powered by',

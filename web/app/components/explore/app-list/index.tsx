@@ -167,9 +167,9 @@ const Apps = ({
         setIsLoading(true)
         const { installed_apps }: any = await fetchInstalledAppList()
         if (installed_apps && installed_apps.length > 0) {
-          // 跳转到第一个已安装的应用
+          // 跳转到第一个已安装的应用并自动开启新对话
           const firstApp = installed_apps[0]
-          push(`/explore/installed/${firstApp.id}`)
+          push(`/explore/installed/${firstApp.id}?autoNewChat=true`)
         }
         else {
           // 没有已安装的应用

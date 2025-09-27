@@ -135,10 +135,12 @@ const ChatWithHistory: FC<ChatWithHistoryProps> = ({
 export type ChatWithHistoryWrapProps = {
   installedAppInfo?: InstalledApp
   className?: string
+  autoNewChat?: boolean
 }
 const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
   installedAppInfo,
   className,
+  autoNewChat,
 }) => {
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -182,7 +184,7 @@ const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
     setIsResponding,
     isFullScreenMode: currentFullScreenMode,
     setIsFullScreenMode,
-  } = useChatWithHistory(installedAppInfo)
+  } = useChatWithHistory(installedAppInfo, autoNewChat)
 
   return (
     <ChatWithHistoryContext.Provider value={{
