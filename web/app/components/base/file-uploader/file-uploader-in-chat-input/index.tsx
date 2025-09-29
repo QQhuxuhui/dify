@@ -1,13 +1,11 @@
 import {
   memo,
-  useCallback,
 } from 'react'
 import {
   RiAttachmentLine,
 } from '@remixicon/react'
-import FileFromLinkOrLocal from '../file-from-link-or-local'
+import FileInput from '../file-input'
 import ActionButton from '@/app/components/base/action-button'
-import cn from '@/utils/classnames'
 import type { FileUpload } from '@/app/components/base/features/types'
 import { TransferMethod } from '@/types/app'
 
@@ -17,24 +15,20 @@ type FileUploaderInChatInputProps = {
 const FileUploaderInChatInput = ({
   fileConfig,
 }: FileUploaderInChatInputProps) => {
-  const renderTrigger = useCallback((open: boolean) => {
-    return (
-      <ActionButton
-        size='l'
-        className={cn(open && 'bg-state-base-hover')}
-      >
-        <RiAttachmentLine className='h-5 w-5' />
-      </ActionButton>
-    )
-  }, [])
+  const showFromLocal = fileConfig?.allowed_file_upload_methods?.includes(TransferMethod.local_file)
+
+  if (!showFromLocal) {
+    return null
+  }
 
   return (
-    <FileFromLinkOrLocal
-      trigger={renderTrigger}
-      fileConfig={fileConfig}
-      showFromLocal={fileConfig?.allowed_file_upload_methods?.includes(TransferMethod.local_file)}
-      showFromLink={fileConfig?.allowed_file_upload_methods?.includes(TransferMethod.remote_url)}
-    />
+    <ActionButton
+      size='l'
+      className='relative'
+    >
+      <RiAttachmentLine className='h-5 w-5' />
+      <FileInput fileConfig={fileConfig} />
+    </ActionButton>
   )
 }
 

@@ -249,9 +249,10 @@ const ChatWrapper = () => {
               imageUrl={appData.site.icon_url}
             />
           </div>
-          <h1 className="chat-centered-title">
-            {appData.site.title}
-          </h1>
+          <div className="chat-centered-title">
+            {/* {appData.site.title} */}
+            今天有什么可以帮到你？
+          </div>
         </div>
       </div>
     )

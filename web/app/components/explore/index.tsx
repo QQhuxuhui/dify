@@ -22,6 +22,7 @@ const Explore: FC<IExploreProps> = ({
   const { userProfile, isCurrentWorkspaceDatasetOperator } = useAppContext()
   const [hasEditPermission, setHasEditPermission] = useState(false)
   const [installedApps, setInstalledApps] = useState<InstalledApp[]>([])
+  const [workspaceCollapseState, setWorkspaceCollapseState] = useState(false)
 
   useEffect(() => {
     document.title = `${t('explore.title')} - Dify`;
@@ -49,11 +50,28 @@ const Explore: FC<IExploreProps> = ({
             hasEditPermission,
             installedApps,
             setInstalledApps,
+            workspaceCollapseState,
+            setWorkspaceCollapseState,
           }
         }
       >
-        <Sidebar controlUpdateInstalledApps={controlUpdateInstalledApps} />
-        <div className='w-0 grow'>
+        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          workspaceCollapseState ? 'w-0' : 'w-auto'
+        }`}>
+          <Sidebar controlUpdateInstalledApps={controlUpdateInstalledApps} />
+        </div>
+        <div className='w-0 grow transition-all duration-300 ease-in-out relative'>
+          {workspaceCollapseState && (
+            <button
+              onClick={() => setWorkspaceCollapseState(false)}
+              className='absolute top-2 left-6 z-20 flex h-4 w-8 items-center justify-center rounded-lg bg-background-default-hover shadow-md transition-all duration-200 hover:bg-background-default-hover hover:shadow-lg'
+              title="显示工作区"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          )}
           {children}
         </div>
       </ExploreContext.Provider>
