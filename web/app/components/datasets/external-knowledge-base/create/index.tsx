@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { RiArrowLeftLine, RiArrowRightLine } from '@remixicon/react'
 import { useTranslation } from 'react-i18next'
 import KnowledgeBaseInfo from './KnowledgeBaseInfo'
-import ExternalApiSelection from './ExternalApiSelection'
 import RetrievalSettings from './RetrievalSettings'
 import InfoPanel from './InfoPanel'
 import type { CreateKnowledgeBaseReq } from './declarations'
@@ -81,14 +80,14 @@ const ExternalKnowledgeBaseCreate: React.FC<ExternalKnowledgeBaseCreateProps> = 
               })}
             />
             <Divider />
-            <ExternalApiSelection
+            {/* <ExternalApiSelection
               external_knowledge_api_id={formData.external_knowledge_api_id}
               external_knowledge_id={formData.external_knowledge_id}
               onChange={data => handleFormChange({
                 ...formData,
                 ...data,
               })}
-            />
+            /> */}
             <RetrievalSettings
               topK={formData.external_retrieval_model.top_k}
               scoreThreshold={formData.external_retrieval_model.score_threshold}
