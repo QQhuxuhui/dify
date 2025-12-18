@@ -132,7 +132,7 @@ const Header = () => {
             </Tooltip>
           )}
         </div>
-        <div className='flex items-center gap-1'>
+        {/* <div className='flex items-center gap-1'>
           <Tooltip
             popupContent={isFullScreenMode ? '退出全屏' : '全屏显示'}
           >
@@ -156,7 +156,7 @@ const Header = () => {
           {currentConversationId && inputsForms.length > 0 && (
             <ViewFormDropdown />
           )}
-        </div>
+        </div> */}
       </div>
       {!!showConfirm && (
         <Confirm

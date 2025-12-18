@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import { useFile } from './hooks'
 import { useStore } from './store'
 import type { FileUpload } from '@/app/components/base/features/types'
@@ -7,9 +8,9 @@ import { SupportUploadFileTypes } from '@/app/components/workflow/types'
 type FileInputProps = {
   fileConfig: FileUpload
 }
-const FileInput = ({
+const FileInput = forwardRef<HTMLInputElement, FileInputProps>(({
   fileConfig,
-}: FileInputProps) => {
+}, ref) => {
   const files = useStore(s => s.files)
   const { handleLocalFileUpload } = useFile(fileConfig)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +36,7 @@ const FileInput = ({
 
   return (
     <input
+      ref={ref}
       className='absolute inset-0 block w-full cursor-pointer text-[0] opacity-0 disabled:cursor-not-allowed'
       onClick={e => ((e.target as HTMLInputElement).value = '')}
       type='file'
@@ -44,6 +46,8 @@ const FileInput = ({
       multiple={!!fileConfig.number_limits && fileConfig.number_limits > 1}
     />
   )
-}
+})
+
+FileInput.displayName = 'FileInput'
 
 export default FileInput

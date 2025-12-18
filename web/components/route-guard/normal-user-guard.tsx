@@ -9,7 +9,7 @@ type NormalUserGuardProps = {
 }
 
 /**
- * 路由守卫组件：阻止普通用户访问管理页面
+ * 路由守卫组件：阻止受限用户(normal和editor角色)访问管理页面
  */
 const NormalUserGuard: React.FC<NormalUserGuardProps> = ({
   children,
@@ -17,17 +17,17 @@ const NormalUserGuard: React.FC<NormalUserGuardProps> = ({
 }) => {
   const router = useRouter()
   const { currentWorkspace } = useAppContext()
-  const isNormalUser = currentWorkspace.role === 'normal'
+  const isLimitedUser = currentWorkspace.role === 'normal' || currentWorkspace.role === 'editor'
 
   useEffect(() => {
-    if (isNormalUser) {
-      console.log('普通用户尝试访问受限页面，重定向到:', redirectTo)
+    if (isLimitedUser) {
+      console.log('受限用户尝试访问受限页面，重定向到:', redirectTo)
       router.push(redirectTo)
     }
-  }, [isNormalUser, router, redirectTo])
+  }, [isLimitedUser, router, redirectTo])
 
-  // 如果是普通用户，不渲染内容（已重定向）
-  if (isNormalUser)
+  // 如果是受限用户，不渲染内容（已重定向）
+  if (isLimitedUser)
     return null
 
   return <>{children}</>

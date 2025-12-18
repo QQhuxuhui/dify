@@ -7,6 +7,8 @@ type IExplore = {
   hasEditPermission: boolean
   installedApps: InstalledApp[]
   setInstalledApps: (installedApps: InstalledApp[]) => void
+  workspaceCollapseState: boolean
+  setWorkspaceCollapseState: (state: boolean) => void
 }
 
 const ExploreContext = createContext<IExplore>({
@@ -15,6 +17,8 @@ const ExploreContext = createContext<IExplore>({
   hasEditPermission: false,
   installedApps: [],
   setInstalledApps: () => { },
+  workspaceCollapseState: false,
+  setWorkspaceCollapseState: () => { },
 })
 
 export default ExploreContext

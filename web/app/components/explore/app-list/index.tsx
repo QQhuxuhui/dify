@@ -13,7 +13,7 @@ import ExploreContext from '@/context/explore-context'
 import type { App } from '@/models/explore'
 import Category from '@/app/components/explore/category'
 import AppCard from '@/app/components/explore/app-card'
-import { fetchAppDetail, fetchAppList } from '@/service/explore'
+import { fetchAppDetail, fetchAppList, fetchInstalledAppList } from '@/service/explore'
 import { importDSL } from '@/service/apps'
 import { useTabSearchParams } from '@/hooks/use-tab-searchparams'
 import CreateAppModal from '@/app/components/explore/create-app-modal'
@@ -57,7 +57,7 @@ const Apps = ({
     handleSearch()
   }
 
-  const [currentType, setCurrentType] = useState<string>('')
+  const [currentType] = useState<string>('')
   const [currCategory, setCurrCategory] = useTabSearchParams({
     defaultTab: allCategoriesEn,
     disableSearchParams: false,
@@ -149,12 +149,45 @@ const Apps = ({
       localStorage.setItem(NEED_REFRESH_APP_LIST_KEY, '1')
       getRedirection(isCurrentWorkspaceEditor, { id: app.app_id!, mode }, push)
     }
-    catch (e) {
+    catch (_error) {
       Toast.notify({ type: 'error', message: t('app.newApp.appCreateFailed') })
     }
   }
 
-  // 普通用户和编辑者显示简化版探索页面
+  // Hooks必须在组件顶层调用
+  const [isLoading, setIsLoading] = React.useState(true)
+  const [noAppsFound, setNoAppsFound] = React.useState(false)
+
+  // 自动获取已安装应用并跳转到第一个（仅限普通用户）
+  React.useEffect(() => {
+    if (!isLimitedUser) return
+
+    const autoRedirectToFirstApp = async () => {
+      try {
+        setIsLoading(true)
+        const { installed_apps }: any = await fetchInstalledAppList()
+        if (installed_apps && installed_apps.length > 0) {
+          // 跳转到第一个已安装的应用并自动开启新对话
+          const firstApp = installed_apps[0]
+          push(`/explore/installed/${firstApp.id}?autoNewChat=true`)
+        }
+        else {
+          // 没有已安装的应用
+          setNoAppsFound(true)
+          setIsLoading(false)
+        }
+      }
+      catch (error) {
+        console.error('获取已安装应用失败:', error)
+        setNoAppsFound(true)
+        setIsLoading(false)
+      }
+    }
+
+    autoRedirectToFirstApp()
+  }, [isLimitedUser, push])
+
+  // 普通用户和编辑者显示简化版探索页面，并自动跳转到第一个已安装应用
   if (isLimitedUser) {
     return (
       <div className={cn(
@@ -162,14 +195,25 @@ const Apps = ({
       )}>
         <div className='shrink-0 px-12 pt-6'>
           <div className={`mb-1 ${s.textGradient} text-xl font-semibold`}>{t('explore.apps.title')}</div>
-          <div className='text-sm text-text-tertiary'>通过探索页面体验工作区的对话功能</div>
+          <div className='text-sm text-text-tertiary'>
+            {isLoading ? '正在为您打开工作区应用...' : '通过探索页面体验工作区的对话功能'}
+          </div>
         </div>
 
         <div className='flex h-full items-center justify-center'>
           <div className='text-center'>
-            <div className='mb-2 text-lg font-medium text-text-secondary'>🎯 工作区对话功能</div>
-            <div className='mb-4 text-sm text-text-tertiary'>您可以在这里体验与AI助手的对话交流</div>
-            <div className='text-xs text-text-quaternary'>如需创建和管理应用，请联系管理员开通权限</div>
+            {isLoading ? (
+              <>
+                <Loading type='area' />
+                <div className='mt-4 text-sm text-text-tertiary'>正在加载您的工作区应用</div>
+              </>
+            ) : noAppsFound ? (
+              <>
+                <div className='mb-2 text-lg font-medium text-text-secondary'>🎯 工作区对话功能</div>
+                <div className='mb-4 text-sm text-text-tertiary'>暂无可用的工作区应用</div>
+                <div className='text-xs text-text-quaternary'>请联系管理员安装应用或开通权限</div>
+              </>
+            ) : null}
           </div>
         </div>
       </div>

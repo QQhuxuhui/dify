@@ -1,6 +1,6 @@
 'use client'
 import type { FC } from 'react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useContext } from 'use-context-selector'
 import ExploreContext from '@/context/explore-context'
@@ -15,9 +15,15 @@ export type IInstalledAppProps = {
 const InstalledApp: FC<IInstalledAppProps> = ({
   id,
 }) => {
-  const { installedApps } = useContext(ExploreContext)
+  const { installedApps, setWorkspaceCollapseState } = useContext(ExploreContext)
   const searchParams = useSearchParams()
   const installedApp = installedApps.find(item => item.id === id)
+  const autoNewChat = searchParams.get('autoNewChat')
+
+  // 当聊天助手加载时自动隐藏工作区
+  useEffect(() => {
+    setWorkspaceCollapseState(true)
+  }, [setWorkspaceCollapseState])
 
   if (!installedApp) {
     return (
@@ -33,6 +39,7 @@ const InstalledApp: FC<IInstalledAppProps> = ({
         <ChatWithHistory
           installedAppInfo={installedApp}
           className='overflow-hidden rounded-2xl shadow-md'
+          autoNewChat={autoNewChat === 'true'}
         />
       )}
       {installedApp.app.mode === 'completion' && (

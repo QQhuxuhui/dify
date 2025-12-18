@@ -73,8 +73,8 @@
 /* 侧边栏隐藏/显示的平滑过渡 */
 .sidebar-transition {
   transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
-              opacity 0.3s ease-in-out,
-              transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    opacity 0.3s ease-in-out,
+    transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
 }
 
 /* 全屏模式下的聊天内容容器 - 占满整个面板 */
@@ -94,7 +94,7 @@
 }
 
 /* 全屏模式下的Header区域 */
-.fullscreen-mode .chat-wrapper > *:first-child {
+.fullscreen-mode .chat-wrapper>*:first-child {
   flex-shrink: 0 !important;
   width: 100% !important;
   z-index: 10 !important;
@@ -102,7 +102,7 @@
 
 /* 全屏模式下的聊天内容区域 */
 .fullscreen-mode .chat-content,
-.fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
+.fullscreen-mode .chat-wrapper>div:not(:first-child):not(:last-child) {
   flex: 1 !important;
   width: 100% !important;
   height: auto !important;
@@ -112,7 +112,7 @@
 
 /* 全屏模式下的输入框区域 */
 .fullscreen-mode .chat-input-area,
-.fullscreen-mode .chat-wrapper > *:last-child {
+.fullscreen-mode .chat-wrapper>*:last-child {
   flex-shrink: 0 !important;
   width: 100% !important;
   padding: 1rem !important;
@@ -126,7 +126,7 @@
   top: 54% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 90% !important;
+  width: 100% !important;
   max-width: 600px !important;
   background: transparent !important;
   display: flex !important;
@@ -146,7 +146,7 @@
   position: static !important;
   bottom: auto !important;
   width: 100% !important;
-  max-width: 600px !important;
+  max-width: 774px !important;
   margin: 0 auto !important;
   background: transparent !important;
   display: flex !important;
@@ -155,16 +155,18 @@
 }
 
 /* 输入框内部容器居中 */
-.chat-input-centered > div {
+.chat-input-centered>div {
   width: 100% !important;
-  max-width: 600px !important;
+  max-width: 774px !important;
   margin: 0 auto !important;
 }
 
 /* 确保输入框样式优化 */
 .chat-centered-input-container .relative.z-10.rounded-xl,
 .chat-input-centered .relative.z-10.rounded-xl {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .02),
+    0 2px 2px rgba(72, 104, 178, .01),
+    0 30px 60px rgba(72, 104, 178, .03) !important;
   border: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
 
@@ -184,10 +186,10 @@
 
 /* 标题文字样式 */
 .chat-centered-title {
-  font-size: 2.25rem !important;
-  font-weight: 700 !important;
-  line-height: 2.5rem !important;
-  color: #1f2937 !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 32px !important;
+  color: var(--dsw-alias-label-primary) !important;
   text-align: left !important;
   margin: 0 !important;
   letter-spacing: -0.025em !important;
@@ -206,10 +208,10 @@
   transform: translate(-50%, -130%) !important;
 }
 
-.fullscreen-mode .chat-centered-title {
+/* .fullscreen-mode .chat-centered-title {
   font-size: 2.5rem !important;
   line-height: 1 !important;
-}
+} */
 
 /* 全屏模式下的居中输入框 */
 .fullscreen-mode .chat-centered-input-container {
@@ -225,19 +227,20 @@
   max-width: 700px !important;
 }
 
-.fullscreen-mode .chat-input-centered > div {
+.fullscreen-mode .chat-input-centered>div {
   max-width: 700px !important;
 }
 
 /* 全屏模式在所有设备上都占满整个浏览器 */
 @media (max-width: 640px) {
+
   .fullscreen-mode .chat-content,
-  .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
+  .fullscreen-mode .chat-wrapper>div:not(:first-child):not(:last-child) {
     padding: 0.5rem !important;
   }
 
   .fullscreen-mode .chat-input-area,
-  .fullscreen-mode .chat-wrapper > *:last-child {
+  .fullscreen-mode .chat-wrapper>*:last-child {
     padding: 0.5rem !important;
   }
 
@@ -260,23 +263,24 @@
     transform: translate(-50%, -100%) !important;
   }
 
-  .chat-centered-title {
+  /* .chat-centered-title {
     font-size: 1.5rem !important;
     line-height: 1.75rem !important;
-  }
+  } */
 
   .fullscreen-mode .chat-centered-header {
     transform: translate(-50%, -110%) !important;
   }
 
-  .fullscreen-mode .chat-centered-title {
+  /* .fullscreen-mode .chat-centered-title {
     font-size: 1.75rem !important;
-  }
+  } */
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
+
   .fullscreen-mode .chat-content,
-  .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
+  .fullscreen-mode .chat-wrapper>div:not(:first-child):not(:last-child) {
     padding: 1rem !important;
   }
 
@@ -295,28 +299,29 @@
     transform: translate(-50%, -115%) !important;
   }
 
-  .chat-centered-title {
+  /* .chat-centered-title {
     font-size: 1.875rem !important;
     line-height: 2rem !important;
-  }
+  } */
 
   .fullscreen-mode .chat-centered-header {
     transform: translate(-50%, -125%) !important;
   }
-
+/* 
   .fullscreen-mode .chat-centered-title {
     font-size: 2rem !important;
-  }
+  } */
 }
 
 @media (min-width: 1025px) {
+
   .fullscreen-mode .chat-content,
-  .fullscreen-mode .chat-wrapper > div:not(:first-child):not(:last-child) {
+  .fullscreen-mode .chat-wrapper>div:not(:first-child):not(:last-child) {
     padding: 1.5rem !important;
   }
 
   .fullscreen-mode .chat-input-area,
-  .fullscreen-mode .chat-wrapper > *:last-child {
+  .fullscreen-mode .chat-wrapper>*:last-child {
     padding: 1.5rem !important;
   }
 
@@ -325,17 +330,17 @@
     transform: translate(-50%, -120%) !important;
   }
 
-  .chat-centered-title {
+  /* .chat-centered-title {
     font-size: 2rem !important;
     line-height: 2.25rem !important;
-  }
+  } */
 
   .fullscreen-mode .chat-centered-header {
     transform: translate(-50%, -130%) !important;
   }
 
-  .fullscreen-mode .chat-centered-title {
+  /* .fullscreen-mode .chat-centered-title {
     font-size: 2.25rem !important;
     line-height: 1 !important;
-  }
+  } */
 }
